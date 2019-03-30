@@ -1,0 +1,4 @@
+.idea/
+.appimage-build*/
+__pycache__/
+*.py[c|o]
