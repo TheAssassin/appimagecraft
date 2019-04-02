@@ -16,7 +16,7 @@ class AllBuildScriptsGenerator:
 
         self._logger = get_logger("script_gen")
 
-    def _generate_main_script(self, build_dir: str, build_scripts: dict):
+    def _generate_main_script(self, build_dir: str, build_scripts: dict) -> str:
         project_config = self._config["project"]
 
         main_script_path = os.path.join(build_dir, "build.sh")
@@ -106,6 +106,8 @@ class AllBuildScriptsGenerator:
         # (re-)create script file
         main_script_gen.build_file()
 
+        return main_script_path
+
     def generate_builder_scripts(self, build_dir: str) -> dict:
         build_config: dict = self._config["build"]
 
@@ -132,10 +134,12 @@ class AllBuildScriptsGenerator:
         gen = PrePostBuildScriptsGenerator(self._config.get("scripts", None))
         gen.build_files(build_dir)
 
-    def generate_all_scripts(self, build_dir):
+    def generate_all_scripts(self, build_dir) -> str:
         self.generate_pre_post_build_scripts(build_dir)
 
         build_scripts = self.generate_builder_scripts(build_dir)
 
-        self._generate_main_script(build_dir, build_scripts)
+        main_script_path = self._generate_main_script(build_dir, build_scripts)
+
+        return main_script_path
 
