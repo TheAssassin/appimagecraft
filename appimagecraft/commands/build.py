@@ -22,9 +22,6 @@ class BuildCommand(CommandBase):
     def run(self):
         self._logger.info("Generating build scripts in {}".format(self._build_dir))
 
-        if self._build_dir is None:
-            raise ValueError("build dir has not been set")
-
         gen = self._get_gen()
 
         build_script = gen.generate_all_scripts(self._build_dir)

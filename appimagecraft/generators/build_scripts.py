@@ -135,6 +135,9 @@ class AllBuildScriptsGenerator:
         gen.build_files(build_dir)
 
     def generate_all_scripts(self, build_dir) -> str:
+        if build_dir is None:
+            raise ValueError("build dir has not been set")
+
         self.generate_pre_post_build_scripts(build_dir)
 
         build_scripts = self.generate_builder_scripts(build_dir)
