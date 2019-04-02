@@ -1,3 +1,4 @@
+import os
 from typing import List, TextIO
 
 
@@ -30,3 +31,6 @@ class BashScriptGenerator:
         with open(self._path, "w") as f:
             self._write_header(f)
             self._write_lines(f, self._lines)
+
+        # shell scripts are supposed to be executable
+        os.chmod(self._path, 0o755)
