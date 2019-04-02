@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 
 from appimagecraft._logging import get_logger
 from appimagecraft._util import convert_kv_list_to_dict
+from appimagecraft.validators import ShellCheckValidator, ValidationError
 from .bash_script import BashScriptGenerator
 
 
@@ -151,3 +152,16 @@ class AppImageBuildScriptGenerator:
         gen.add_line(" ".join(ld_command))
 
         gen.build_file()
+
+        # validate script(s), if possible
+        if ShellCheckValidator.is_available():
+            self._logger.debug("validating scripts with shellcheck")
+            validator = ShellCheckValidator()
+
+            try:
+                validator.validate(path)
+            except ValidationError:
+                self._logger.error("validation of shell scripts failed")
+
+        else:
+            self._logger.debug("shellcheck validator not available, skipping validation")
