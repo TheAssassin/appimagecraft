@@ -12,14 +12,25 @@ from .commands import *  # noqa
 def parse_args():
     parser = argparse.ArgumentParser(description="appimagecraft -- woo!")
 
-    parser.add_argument("--config", nargs=1, help="Path to appimagecraft config", default="appimagecraft.yml")
-    parser.add_argument("--builder", nargs="?", help="Name of builder to use (default: first listed)")
-    parser.add_argument("--build-dir", nargs="?", help="Path to build directory (default: auto-generated)")
+    parser.add_argument("-f", "--config-file",
+                        nargs=1, dest="config_file",
+                        help="Path to appimagecraft config",default="appimagecraft.yml")
 
-    parser.add_argument("--list-commands", action="store_const", const=True, dest="list_commands",
+    parser.add_argument("-b", "--builder",
+                        nargs="?", dest="builder_name",
+                        help="Name of builder to use (default: first listed)")
+
+    parser.add_argument("-d", "--build-dir",
+                        nargs="?", dest="build_dir",
+                        help="Path to build directory (default: auto-generated)")
+
+    parser.add_argument("--list-commands",
+                        dest="list_commands",
+                        action="store_const", const=True,
                         help="List available commands")
 
-    parser.add_argument("command", nargs="?", help="Command to run (default: build)", default="build")
+    parser.add_argument("command",
+                        nargs="?", help="Command to run (default: build)", default="build")
 
     args = parser.parse_args()
 
@@ -47,7 +58,7 @@ def run():
 
     args = parse_args()
 
-    yml_parser = AppImageCraftYMLParser(args.config)
+    yml_parser = AppImageCraftYMLParser(args.config_file)
     config = yml_parser.data()
 
     logger.info("Building project {}".format(config["project"]["name"]))
@@ -58,21 +69,21 @@ def run():
         command_name = "build"
 
     commands_classes_map = {
-        # "build": BuildCommand,
+        "build": BuildCommand,
         "genscripts": GenerateScriptsCommand,
         # "setup": SetupCommand,
     }
 
     # project root dir = location of config file
-    project_root_dir = os.path.abspath(os.path.dirname(args.config))
+    project_root_dir = os.path.abspath(os.path.dirname(args.config_file))
 
     # set up args
     build_dir = getattr(args, "build_dir", None)
-    builder_name = getattr(args, "builder", None)
+    builder_name = getattr(args, "builder_name", None)
 
     # set default values
     if build_dir is None:
-        build_dir = tempfile.mkdtemp(prefix=".appimagecraft-build-", dir=os.path.dirname(args.config))
+        build_dir = tempfile.mkdtemp(prefix=".appimagecraft-build-", dir=os.path.dirname(args.config_file))
     if builder_name is None:
         # use first builder as fallback
         builder_name = list(config["build"].keys())[0]
