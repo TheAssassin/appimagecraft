@@ -120,3 +120,6 @@ def run():
         command.run()
     except NotImplementedError as e:
         logger.exception(e)
+    except KeyboardInterrupt:
+        logger.error("process interrupted by user")
+        sys.exit(1)
