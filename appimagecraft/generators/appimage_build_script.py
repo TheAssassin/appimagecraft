@@ -3,6 +3,7 @@ import re
 import shlex
 from urllib.parse import urlparse
 
+from appimagecraft._logging import get_logger
 from appimagecraft._util import convert_kv_list_to_dict
 from .bash_script import BashScriptGenerator
 
@@ -13,6 +14,8 @@ class AppImageBuildScriptGenerator:
             ld_config = dict()
 
         self._config = ld_config
+
+        self._logger = get_logger("scriptgen")
 
     def build_file(self, path: str):
         gen = BashScriptGenerator(path)

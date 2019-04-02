@@ -1,12 +1,16 @@
 import os
 from typing import List, TextIO
 
+from .._logging import get_logger
+
 
 class BashScriptGenerator:
     def __init__(self, path):
         self._path = path
 
         self._lines = []
+
+        self._logger = get_logger("scriptgen")
 
     def add_lines(self, lines: List[str]):
         self._lines += lines
