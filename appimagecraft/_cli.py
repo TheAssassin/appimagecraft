@@ -93,11 +93,17 @@ def run():
     builder_name = getattr(args, "builder_name", None)
 
     # set default values
-    if build_dir is None:
-        build_dir = tempfile.mkdtemp(prefix=".appimagecraft-build-", dir=os.path.dirname(args.config_file))
     if builder_name is None:
-        # use first builder as fallback
-        builder_name = list(config["build"].keys())[0]
+        try:
+            # use first builder as fallback
+            builder_name = list(config["build"].keys())[0]
+        except KeyError:
+            logger.critical("no builder configured in config file")
+            sys.exit(1)
+
+    if build_dir is None:
+        build_dir = tempfile.mkdtemp(prefix=".appimagecraft-build-{}-".format(builder_name),
+                                     dir=os.path.dirname(args.config_file))
 
     # make sure build_dir is absolute
     build_dir = os.path.abspath(build_dir)
