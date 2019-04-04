@@ -124,7 +124,7 @@ def run():
         command = command_class(config, project_root_dir, build_dir, builder_name)
 
     if command is None:
-        logger.error("No such command: {}".format(command_name))
+        logger.critical("No such command: {}".format(command_name))
         sys.exit(1)
 
     try:
@@ -132,5 +132,5 @@ def run():
     except NotImplementedError as e:
         logger.exception(e)
     except KeyboardInterrupt:
-        logger.error("process interrupted by user")
+        logger.critical("process interrupted by user")
         sys.exit(1)
