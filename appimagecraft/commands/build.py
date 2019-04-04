@@ -1,3 +1,6 @@
+import glob
+import os
+import shutil
 import subprocess
 import sys
 
@@ -22,9 +25,10 @@ class BuildCommand(CommandBase):
         return gen
 
     def run(self):
-        self._logger.info("Generating build scripts in {}".format(self._build_dir))
+        try:
+            self._logger.info("Generating build scripts in {}".format(self._build_dir))
 
-        gen = self._get_gen()
+            gen = self._get_gen()
 
             try:
                 build_script = gen.generate_all_scripts(self._build_dir)
@@ -32,6 +36,32 @@ class BuildCommand(CommandBase):
                 self._logger.critical("validation of shell scripts failed")
                 sys.exit(1)
 
-        self._logger.info("Calling main build script {}".format(build_script))
+            self._logger.info("Calling main build script {}".format(build_script))
 
-        subprocess.check_call([build_script])
+            subprocess.check_call([build_script])
+
+            self._logger.info("Moving artifacts into project root directory")
+
+            artifact_paths = glob.glob("{}/artifacts/*".format(self._build_dir))
+
+            if not artifact_paths:
+                self._logger.warning("Could not find any artifacts to move to project root dir")
+
+            else:
+                for path in artifact_paths:
+                    # need to specify absolute destination path, otherwise move will raise and exception
+                    dest = os.path.join(self._project_root_dir, os.path.basename(path))
+
+                    self._logger.debug("Moving artifact {} to {}".format(path, dest))
+
+                    shutil.move(path, dest)
+
+        except subprocess.CalledProcessError as e:
+            self._logger.critical("Build script returned non-zero exit status {}".format(e.returncode))
+
+        except Exception as e:
+            self._logger.exception(e)
+
+        finally:
+            self._logger.info("Cleaning up build directory")
+            shutil.rmtree(self._build_dir)

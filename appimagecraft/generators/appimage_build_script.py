@@ -42,6 +42,14 @@ class AppImageBuildScriptGenerator:
         url = "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/" \
               "linuxdeploy-{}.AppImage".format(arch)
 
+        # change to custom directory
+        gen.add_lines([
+            "# switch to separate build dir",
+            "mkdir -p appimage-build",
+            "cd appimage-build",
+            "",
+        ])
+
         gen.add_lines([
             "# fetch linuxdeploy from GitHub releases",
             "wget -c {}".format(shlex.quote(url)),
@@ -133,7 +141,7 @@ class AppImageBuildScriptGenerator:
             gen.add_line()
 
         # run linuxdeploy with the configured plugins
-        ld_command = ["./linuxdeploy-{}.AppImage".format(arch), "--appdir", "AppDir", "--output", "appimage"]
+        ld_command = ["./linuxdeploy-{}.AppImage".format(arch), "--appdir", "../AppDir", "--output", "appimage"]
 
         for plugin_name in ld_plugins.keys():
             ld_command.append("--plugin")
@@ -150,5 +158,11 @@ class AppImageBuildScriptGenerator:
                 raise ValueError("Invalid type for extra_args: {}".format(type(extra_args)))
 
         gen.add_line(" ".join(ld_command))
+
+        gen.add_lines([
+            "",
+            "# move built AppImages to artifacts dir",
+            "find . -type f -iname '*.AppImage' -not -iname 'linuxdeploy*.AppImage' -exec mv '{}' ../artifacts ';'",
+        ])
 
         gen.build_file()

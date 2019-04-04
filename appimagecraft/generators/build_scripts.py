@@ -1,6 +1,7 @@
 import os.path
 import shlex
 
+from appimagecraft.validators import ShellCheckValidator, ValidationError
 from ..builders import CMakeBuilder
 from .._logging import get_logger
 from .._util import convert_kv_list_to_dict
@@ -57,11 +58,14 @@ class AllBuildScriptsGenerator:
 
         # header
         main_script_gen.add_lines([
-            "# call pre-build script (if available)",
-            "[ -f pre_build.sh ] && bash pre_build.sh",
-            "",
             "# make sure to be in the build dir",
             "cd {}".format(shlex.quote(build_dir)),
+            "",
+            "# create artifacts directory (called scripts shall put their build results into this directory)",
+            "[ ! -d artifacts ] && mkdir artifacts",
+            "",
+            "# call pre-build script (if available)",
+            "[ -f pre_build.sh ] && bash pre_build.sh",
             "",
             "# create AppDir so that tools which are sensitive to that won't complain",
             "mkdir -p AppDir",
@@ -77,6 +81,9 @@ class AllBuildScriptsGenerator:
         del build_scripts[self._builder_name]
 
         # generate commented entries for remaining script
+        # it doesn't make very much sense to run additional builders, since they most likely create the same artifacts
+        # and we don't want to overwrite previously built files in our artifacts directory
+        # also, it's much cleaner to build with different builders in separate directory
         if build_scripts:
             main_script_gen.add_line(
                 "# additional available builders (call appimagecraft with --builder <name> to switch)")
