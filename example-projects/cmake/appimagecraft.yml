@@ -22,6 +22,7 @@ scripts:
       [Desktop Entry]
       Name=Example
       Type=Application
+      Terminal=true
       Categories=Utility;
       Exec=example
       Icon=example
