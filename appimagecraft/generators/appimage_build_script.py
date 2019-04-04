@@ -152,16 +152,3 @@ class AppImageBuildScriptGenerator:
         gen.add_line(" ".join(ld_command))
 
         gen.build_file()
-
-        # validate script(s), if possible
-        if ShellCheckValidator.is_available():
-            self._logger.debug("validating scripts with shellcheck")
-            validator = ShellCheckValidator()
-
-            try:
-                validator.validate(path)
-            except ValidationError:
-                self._logger.error("validation of shell scripts failed")
-
-        else:
-            self._logger.debug("shellcheck validator not available, skipping validation")

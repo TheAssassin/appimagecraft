@@ -1,7 +1,9 @@
 import subprocess
+import sys
 
 from . import CommandBase
 from ..generators import AllBuildScriptsGenerator
+from ..validators import ValidationError
 from .. import _logging
 
 
@@ -24,7 +26,11 @@ class BuildCommand(CommandBase):
 
         gen = self._get_gen()
 
-        build_script = gen.generate_all_scripts(self._build_dir)
+            try:
+                build_script = gen.generate_all_scripts(self._build_dir)
+            except ValidationError:
+                self._logger.critical("validation of shell scripts failed")
+                sys.exit(1)
 
         self._logger.info("Calling main build script {}".format(build_script))
 

@@ -1,5 +1,8 @@
+import sys
+
 from . import CommandBase
 from ..generators import AllBuildScriptsGenerator
+from ..validators import ValidationError
 from .. import _logging
 
 
@@ -23,4 +26,8 @@ class GenerateScriptsCommand(CommandBase):
 
         gen = self._get_gen()
 
-        gen.generate_all_scripts(self._build_dir)
+        try:
+            gen.generate_all_scripts(self._build_dir)
+        except ValidationError:
+            self._logger.critical("validation of shell scripts failed")
+            sys.exit(1)

@@ -144,5 +144,15 @@ class AllBuildScriptsGenerator:
 
         main_script_path = self._generate_main_script(build_dir, build_scripts)
 
+        # validate script(s), if possible
+        if ShellCheckValidator.is_available():
+            self._logger.debug("validating scripts with shellcheck")
+            validator = ShellCheckValidator()
+
+            validator.validate(main_script_path)
+
+        else:
+            self._logger.debug("shellcheck validator not available, skipping validation")
+
         return main_script_path
 
