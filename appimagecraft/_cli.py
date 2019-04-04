@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os.path
 import sys
 import tempfile
@@ -26,15 +27,25 @@ def parse_args():
 
     parser.add_argument("--list-commands",
                         dest="list_commands",
-                        action="store_const", const=True,
+                        action="store_const", const=True, default=False,
                         help="List available commands")
+
+    parser.add_argument("--debug",
+                        dest="loglevel",
+                        action="store_const", const=logging.DEBUG, default=logging.INFO,
+                        help="Display debug messages")
+
+    parser.add_argument("--log-timestamps",
+                        dest="log_timestamps",
+                        action="store_const", const=True, default=False,
+                        help="Log timestamps (useful for debugging build times etc.)")
 
     parser.add_argument("command",
                         nargs="?", help="Command to run (default: build)", default="build")
 
     args = parser.parse_args()
 
-    if getattr(args, "list_commands", False):
+    if args.list_commands:
         commands = """
             Available commands:
                 build:       build current project
@@ -50,13 +61,13 @@ def parse_args():
 
 
 def run():
-    # setup
-    _logging.setup()
-
     # get logger for CLI
     logger = _logging.get_logger("cli")
 
     args = parse_args()
+
+    # setup
+    _logging.setup(args.loglevel, args.log_timestamps)
 
     yml_parser = AppImageCraftYMLParser(args.config_file)
     config = yml_parser.data()
