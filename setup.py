@@ -8,7 +8,8 @@ setup(
     long_description=open("README.md").read(),
     install_requires=[
         "requests",
-        "PyYAML"
+        "PyYAML",
+        "coloredlogs",
     ],
     entry_points={
         "console_scripts": [
