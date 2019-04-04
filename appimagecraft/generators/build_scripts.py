@@ -25,7 +25,9 @@ class AllBuildScriptsGenerator:
         main_script_gen = BashScriptGenerator(main_script_path)
 
         def export_variable(var_name, var_value):
-            main_script_gen.add_line("export {}={}".format(var_name, var_value))
+            # fixes shellcheck warning SC2155
+            main_script_gen.add_line("{}={}".format(var_name, var_value))
+            main_script_gen.add_line("export {}".format(var_name))
 
         # export PROJECT_ROOT and BUILD_DIR so they can be used by scripts etc.
         # convenience feature
