@@ -2,13 +2,13 @@ import coloredlogs
 import logging
 
 
-def setup(loglevel=logging.INFO, with_timestamps=False, force_colors=False):
+def setup(loglevel=logging.INFO, with_timestamps=False, force_colors=False, log_locations=False):
     fmt = "%(name)s[%(process)s] [%(levelname)s] %(message)s"
 
     if with_timestamps:
         fmt = "%(asctime)s " + fmt
 
-    if loglevel <= logging.DEBUG:
+    if log_locations:
         fmt = "%(pathname)s:%(lineno)d:\n" + fmt
 
     # basic logging setup

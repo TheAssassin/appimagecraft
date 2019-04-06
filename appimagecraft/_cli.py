@@ -35,6 +35,11 @@ def parse_args():
                         action="store_const", const=logging.DEBUG, default=logging.INFO,
                         help="Display debug messages")
 
+    parser.add_argument("--log-source-location",
+                        dest="log_message_locations",
+                        action="store_const", const=True, default=False,
+                        help="Print message locations (might be picked up by IDEs to allow for jumping to the source)")
+
     parser.add_argument("--log-timestamps",
                         dest="log_timestamps",
                         action="store_const", const=True, default=False,
@@ -69,7 +74,12 @@ def run():
     args = parse_args()
 
     # setup
-    _logging.setup(args.loglevel, with_timestamps=args.log_timestamps, force_colors=args.force_colors)
+    _logging.setup(
+        args.loglevel,
+        with_timestamps=args.log_timestamps,
+        force_colors=args.force_colors,
+        log_locations=args.log_message_locations,
+    )
 
     # get logger for CLI
     logger = _logging.get_logger("cli")
