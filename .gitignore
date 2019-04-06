@@ -4,3 +4,4 @@ __pycache__/
 *.py[c|o]
 *build*/
 *.egg-info/
+*.AppImage
