@@ -2,7 +2,7 @@ import coloredlogs
 import logging
 
 
-def setup(loglevel=logging.INFO, with_timestamps=False):
+def setup(loglevel=logging.INFO, with_timestamps=False, force_colors=False):
     fmt = "%(name)s[%(process)s] [%(levelname)s] %(message)s"
 
     if with_timestamps:
@@ -19,13 +19,17 @@ def setup(loglevel=logging.INFO, with_timestamps=False):
     styles["levelname"] = {
         "color": "cyan",
     }
-    coloredlogs.install("DEBUG", fmt=fmt, styles=styles)
+
+    kwargs = dict(fmt=fmt, styles=styles)
+
+    if force_colors:
+        kwargs["isatty"] = True
+
+    coloredlogs.install(loglevel, **kwargs)
 
     # set up logger
-    logger = logging.getLogger("appimagecraft.main")
+    logger = logging.getLogger("main")
     logger.setLevel(loglevel)
-
-    # logger.addHandler(logging.han)
 
 
 def get_logger(context: str = ""):

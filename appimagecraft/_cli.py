@@ -40,6 +40,11 @@ def parse_args():
                         action="store_const", const=True, default=False,
                         help="Log timestamps (useful for debugging build times etc.)")
 
+    parser.add_argument("--force-colors",
+                        dest="force_colors",
+                        action="store_const", const=True, default=False,
+                        help="Force colored output")
+
     parser.add_argument("command",
                         nargs="?", help="Command to run (default: build)", default="build")
 
@@ -61,13 +66,13 @@ def parse_args():
 
 
 def run():
-    # get logger for CLI
-    logger = _logging.get_logger("cli")
-
     args = parse_args()
 
     # setup
-    _logging.setup(args.loglevel, args.log_timestamps)
+    _logging.setup(args.loglevel, with_timestamps=args.log_timestamps, force_colors=args.force_colors)
+
+    # get logger for CLI
+    logger = _logging.get_logger("cli")
 
     yml_parser = AppImageCraftYMLParser(args.config_file)
     config = yml_parser.data()
