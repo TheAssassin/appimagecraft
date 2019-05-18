@@ -8,3 +8,4 @@ python:
 
 script:
   - bash -xe ci/build-example-projects.sh
+  - bash -xe ci/build-appimage.sh
