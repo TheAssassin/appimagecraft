@@ -8,4 +8,16 @@ python:
 
 script:
   - bash -xe ci/build-example-projects.sh
-  - bash -xe ci/build-appimage.sh
+  - if [ "$TRAVIS_PYTHON_VERSION" == "3.6" ]; then bash -xe ci/build-appimage.sh; fi
+
+after_success:
+  - |
+    if [ "$TRAVIS_PYTHON_VERSION" == "3.6" ]; then
+        wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+        bash upload.sh appimagecraft*.AppImage
+    fi
+
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)$/
