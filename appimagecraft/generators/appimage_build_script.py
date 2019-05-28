@@ -74,7 +74,7 @@ class AppImageBuildScriptGenerator:
         plugin_name_expr = r"^linuxdeploy-plugin-([^\s\.-]+)(?:-[^\.]+)?(?:\..+)?$"
 
         try:
-            ld_plugins_config = self._config["linuxdeploy"]["plugins"]
+            ld_plugins_config = (self._config.get("linuxdeploy", None) or {}).get("plugins", {})
         except KeyError:
             pass
         else:
@@ -120,7 +120,7 @@ class AppImageBuildScriptGenerator:
 
         # export environment vars listed in config
         try:
-            env_config = self._config["linuxdeploy"]["environment"]
+            env_config = (self._config.get("linuxdeploy", None) or {}).get("environment", {})
         except KeyError:
             pass
         else:
@@ -148,7 +148,7 @@ class AppImageBuildScriptGenerator:
             ld_command.append(shlex.quote(plugin_name))
 
         # add extra arguments specified in config file
-        extra_args = self._config.get("linuxdeploy", {}).get("extra_args")
+        extra_args = (self._config.get("linuxdeploy", None) or {}).get("extra_args", None)
         if extra_args is not None:
             if isinstance(extra_args, list):
                 ld_command += extra_args
