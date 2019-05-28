@@ -82,9 +82,9 @@ class CMakeBuilder(BuilderBase):
             "# build project",
             # "make -j$(nproc)",
             "# we can use CMake so we don't have to guess the build tool (path)",
-            "# starting with CMake 3.12, CMake supports building in parallel with --parallel"
-            "# we just use the environment variable, though, since it's annoying to detect the version"
-            "export CMAKE_BUILD_PARALLEL_LEVEL=''  # empty means \"use tool default parallelism\""
+            "# starting with CMake 3.12, CMake supports building in parallel with --parallel",
+            "# we just use the environment variable, though, since it's annoying to detect the version",
+            "export CMAKE_BUILD_PARALLEL_LEVEL=''  # empty means \"use tool default parallelism\"",
             "cmake --build .",
             "",
             "# install binaries into AppDir (requires correct CMake install(...) configuration)",
