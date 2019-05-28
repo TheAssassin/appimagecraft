@@ -2,6 +2,6 @@
 .appimage-build*/
 __pycache__/
 *.py[c|o]
-*build*/
+*-build-*/
 *.egg-info/
 *.AppImage
