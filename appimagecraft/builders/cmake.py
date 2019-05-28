@@ -15,7 +15,7 @@ class CMakeBuilder(BuilderBase):
 
         self._script_filename = "appimagecraft-build-cmake.sh"
 
-        self._cmake_conf = config
+        self._cmake_conf = config or {}
 
         for cmake_arg in self._get_extra_variables().keys():
             self._validate_cmake_arg_name(cmake_arg)
@@ -26,7 +26,7 @@ class CMakeBuilder(BuilderBase):
             "CMAKE_BUILD_TYPE": "Release",
         }
 
-        data = self._cmake_conf.get("extra_variables", {})
+        data = self._cmake_conf.get("extra_variables", None) or {}
 
         # allow for KEY=Value scheme for extra_variables
         if isinstance(data, list):
