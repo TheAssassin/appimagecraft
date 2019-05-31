@@ -50,6 +50,12 @@ class AppImageBuildScriptGenerator:
             "",
         ])
 
+        # export architecture, might be used by some people
+        gen.add_lines([
+            "export ARCH={}".format(shlex.quote(arch)),
+            "",
+        ])
+
         gen.add_lines([
             "# fetch linuxdeploy from GitHub releases",
             "wget -c {}".format(shlex.quote(url)),
