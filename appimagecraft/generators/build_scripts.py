@@ -74,13 +74,18 @@ class AllBuildScriptsGenerator:
             "",
         ])
 
-        # add entry for main builder
-        # use subshell to set SHLVL properly, which makes output with -x prettier
-        main_script_gen.add_lines([
-            "# call script for main builder {}".format(self._builder_name),
-            "(source {})".format(build_scripts[self._builder_name]),
-        ])
-        del build_scripts[self._builder_name]
+        if self._is_null_builder(self._builder_name):
+            get_logger().debug("skipping generation of entry for null builder as main builder in main script")
+        else:
+            # add entry for main builder
+            # use subshell to set SHLVL properly, which makes output with -x prettier
+            main_script_gen.add_lines([
+                "# call script for main builder {}".format(self._builder_name),
+                "(source {})".format(build_scripts[self._builder_name]),
+            ])
+
+            # handled that one already
+            del build_scripts[self._builder_name]
 
         # generate commented entries for remaining script
         # it doesn't make very much sense to run additional builders, since they most likely create the same artifacts
@@ -89,7 +94,15 @@ class AllBuildScriptsGenerator:
         if build_scripts:
             main_script_gen.add_line(
                 "# additional available builders (call appimagecraft with --builder <name> to switch)")
+
             for builder_name, script in build_scripts.items():
+
+                if self._is_null_builder(builder_name):
+                    get_logger().debug(
+                        "skipping generation of entry for null builder as additional builder in main script"
+                    )
+                    continue
+
                 main_script_gen.add_line("# script for builder {}".format(builder_name))
                 main_script_gen.add_line("#source {}\n".format(script))
 
@@ -128,6 +141,11 @@ class AllBuildScriptsGenerator:
         build_scripts = {}
 
         for builder_name in build_config.keys():
+            # skip null builder
+            if self._is_null_builder(builder_name):
+                get_logger().debug("skipping generation of build script for null builder")
+                continue
+
             try:
                 builder = builders_map[builder_name](build_config[builder_name])
             except KeyError:
@@ -165,3 +183,6 @@ class AllBuildScriptsGenerator:
 
         return main_script_path
 
+    @staticmethod
+    def _is_null_builder(builder_name):
+        return builder_name is None or builder_name.lower() == "null"
