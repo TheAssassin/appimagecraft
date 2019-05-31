@@ -125,26 +125,36 @@ class AppImageBuildScriptGenerator:
         gen.add_line()
 
         # export environment vars listed in config
-        try:
-            env_config = (self._config.get("linuxdeploy", None) or {}).get("environment", {})
-        except KeyError:
-            pass
-        else:
+        def try_export_env_vars(key_name, raw=False):
             try:
-                dict(env_config)
-            except ValueError:
+                env_config = (self._config.get("linuxdeploy", None) or {}).get(key_name, {})
+            except KeyError:
+                pass
+            else:
                 try:
-                    iter(env_config)
+                    dict(env_config)
                 except ValueError:
-                    raise ValueError("environment config is in invalid format")
-                else:
-                    # env_config = {i[0]: i[1] for i in (j.split("=") for j in env_config)}
-                    env_config = convert_kv_list_to_dict(env_config)
+                    try:
+                        iter(env_config)
+                    except ValueError:
+                        raise ValueError("environment config is in invalid format")
+                    else:
+                        env_config = convert_kv_list_to_dict(env_config)
 
-            for env_var, value in dict(env_config).items():
-                gen.add_line("export {}={}".format(shlex.quote(env_var), shlex.quote(value)))
+                gen.add_line("# environment variables from {}".format(key_name))
 
-            gen.add_line()
+                for env_var, value in dict(env_config).items():
+                    name = shlex.quote(env_var)
+
+                    if not raw:
+                        value = shlex.quote(value)
+
+                    gen.add_line("export {}={}".format(name, value))
+
+                gen.add_line()
+
+        try_export_env_vars("environment")
+        try_export_env_vars("raw_environment", raw=True)
 
         # run linuxdeploy with the configured plugins
         ld_command = ["./linuxdeploy-{}.AppImage".format(arch), "--appdir", "../AppDir", "--output", "appimage"]
