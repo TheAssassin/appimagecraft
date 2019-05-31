@@ -134,7 +134,7 @@ class AppImageBuildScriptGenerator:
                 dict(env_config)
             except ValueError:
                 try:
-                    iter(list)
+                    iter(env_config)
                 except ValueError:
                     raise ValueError("environment config is in invalid format")
                 else:
