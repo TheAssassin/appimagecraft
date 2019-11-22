@@ -13,8 +13,6 @@ class CMakeBuilder(BuilderBase):
     def __init__(self, config: dict = None):
         super().__init__()
 
-        self._cmake_conf = config or {}
-
         for cmake_arg in self._get_configure_extra_variables().keys():
             self._validate_cmake_arg_name(cmake_arg)
 
@@ -24,7 +22,7 @@ class CMakeBuilder(BuilderBase):
             "CMAKE_BUILD_TYPE": "Release",
         }
 
-        data = self._cmake_conf.get("extra_variables", None) or {}
+        data = self._builder_config.get("extra_variables", None) or {}
 
         # allow for KEY=Value scheme for extra_variables
         if isinstance(data, list):
@@ -48,7 +46,7 @@ class CMakeBuilder(BuilderBase):
             raise ValueError("Spaces are not allowed in CMake argument names")
 
     def _get_source_dir(self, project_root_dir):
-        source_dir = self._cmake_conf.get("source_dir", None)
+        source_dir = self._builder_config.get("source_dir", None)
 
         if not source_dir:
             return project_root_dir
@@ -100,7 +98,7 @@ class CMakeBuilder(BuilderBase):
         # optional support for CPack
         # allows projects to also build packages, making use of appimagecraft features like auto-created clean build
         # directories, Docker container builds, ...
-        cpack_args: dict = self._cmake_conf.get("cpack", False)
+        cpack_args: dict = self._builder_config.get("cpack", False)
 
         # caution: must check for non-None value (like False) explicitly, an empty value is allowed and would be
         # represented as None
