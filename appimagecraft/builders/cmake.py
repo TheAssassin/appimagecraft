@@ -13,8 +13,6 @@ class CMakeBuilder(BuilderBase):
     def __init__(self, config: dict = None):
         super().__init__()
 
-        self._script_filename = "appimagecraft-build-cmake.sh"
-
         self._cmake_conf = config or {}
 
         for cmake_arg in self._get_extra_variables().keys():
@@ -41,7 +39,7 @@ class CMakeBuilder(BuilderBase):
     @staticmethod
     def from_dict(data: dict):
         # TODO!
-        return CMakeBuilder()
+        raise NotImplementedError()
 
     @staticmethod
     def _validate_cmake_arg_name(name):
