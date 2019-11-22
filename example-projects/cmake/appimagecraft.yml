@@ -10,6 +10,7 @@ environment:
 
 build:
   cmake:
+    source_dir: .
     extra_variables:
       - TEST=ON
     #cpack:
