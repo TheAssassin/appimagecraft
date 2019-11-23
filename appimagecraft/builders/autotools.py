@@ -9,9 +9,6 @@ from . import BuilderBase
 class AutotoolsBuilder(BuilderBase):
     _script_filename = "build-autotools.sh"
 
-    def __init__(self, config: dict = None):
-        super().__init__(config)
-
     def _get_configure_extra_variables(self) -> list:
         default_params = [
             "--prefix=/usr",
