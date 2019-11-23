@@ -14,7 +14,12 @@ class AutotoolsBuilder(BuilderBase):
             "--prefix=/usr",
         ]
 
-        extra_params = self._builder_config.get("configure", {}).get("extra_params", None) or {}
+        configure_config = self._builder_config.get("configure", None)
+
+        if not configure_config:
+            configure_config = dict()
+
+        extra_params = configure_config.get("extra_params",  [])
 
         rv = list(default_params)
         rv += extra_params
