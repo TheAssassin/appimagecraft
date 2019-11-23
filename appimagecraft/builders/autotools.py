@@ -75,7 +75,10 @@ class AutotoolsBuilder(BuilderBase):
         if self._builder_config.get("allow_insource"):
             generator.add_lines([
                 "# in case the project uses autogen.sh, we have to call that script to generate the configure script",
-                "[ -f {0} ] && {0}".format(autogen_path),
+                "[ -f {0} ] && (cd {1} && {0})".format(
+                    shlex.quote(autogen_path),
+                    shlex.quote(os.path.dirname(autogen_path))
+                ),
                 "",
             ])
         else:
