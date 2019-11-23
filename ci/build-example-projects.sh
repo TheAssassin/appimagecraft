@@ -40,7 +40,7 @@ pushd "$REPO_ROOT"/example-projects/cmake
 log "-- Try genscripts command"
 appimagecraft genscripts --build-dir "$WORKDIR"/cmake-genscripts
 log "-- Clean up and recreate workdir for next command"
-rm -r "$WORKDIR"/cmake
+rm -r "$WORKDIR"/cmake-genscripts
 log "-- Try build command"
 appimagecraft build --build-dir "$WORKDIR"/cmake
 popd
@@ -49,7 +49,7 @@ log "Try out different commands on example autotools command"
 log "-- Try genscripts command"
 appimagecraft genscripts --build-dir "$WORKDIR"/autotools-genscripts
 log "-- Clean up and recreate workdir for next command"
-rm -r "$WORKDIR"/cmake
+rm -r "$WORKDIR"/cmake-genscripts
 log "-- Try build command"
 appimagecraft build --build-dir "$WORKDIR"/autotools
 popd
