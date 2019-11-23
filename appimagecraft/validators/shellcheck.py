@@ -28,6 +28,6 @@ class ShellCheckValidator(ValidatorBase):
         try:
             # SC2116 can be ignored safely, it's just about a "useless echo", but we want to test the version_cmd
             # feature with an echo call
-            check_call(["shellcheck", "-e", "SC2116", "-x", path], cwd=os.path.dirname(path))
+            check_call(["shellcheck", "-e", "SC2116", "-e", "SC1091", "-x", path], cwd=os.path.dirname(path))
         except CalledProcessError:
             raise ValidationError("failed to run shellcheck")
