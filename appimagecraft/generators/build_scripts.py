@@ -109,7 +109,7 @@ class AllBuildScriptsGenerator:
         main_script_gen.add_lines([
             "",
             "# call post-build script (if available)",
-            "[ -f post_build.sh ] && bash post_build.sh",
+            "[ -f post_build.sh ] && (source post_build.sh)",
             "",
         ])
 
