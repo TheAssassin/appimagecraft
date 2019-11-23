@@ -14,7 +14,7 @@ class ShellCheckValidator(ValidatorBase):
     def is_available() -> bool:
         try:
             with open(os.devnull, "w") as devnull:
-                check_call(["which", "shellcheck"], stderr=devnull, stdout=devnull)
+                check_call(["command", "-v", "shellcheck"], stderr=devnull, stdout=devnull, shell=True)
         except CalledProcessError:
             return False
         else:
