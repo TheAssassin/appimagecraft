@@ -1,5 +1,6 @@
 from .base import BuilderBase
 from .cmake import CMakeBuilder
+from .autotools import AutotoolsBuilder
 
 
 def get_builder_by_name(name: str, config: dict) -> BuilderBase:

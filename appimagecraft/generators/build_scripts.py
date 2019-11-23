@@ -1,6 +1,7 @@
 import os.path
 import shlex
 
+from appimagecraft.builders import AutotoolsBuilder
 from appimagecraft.validators import ShellCheckValidator, ValidationError
 from ..builders import CMakeBuilder
 from .._logging import get_logger
@@ -136,6 +137,7 @@ class AllBuildScriptsGenerator:
         # generate build configs for every
         builders_map = {
             "cmake": CMakeBuilder,
+            "autotools": AutotoolsBuilder,
         }
 
         build_scripts = {}
