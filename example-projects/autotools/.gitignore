@@ -1,0 +1,10 @@
+*.cache/
+*.m4
+configure
+install-sh
+Makefile.in
+missing
+depcomp
+config.*
+compile
+Makefile

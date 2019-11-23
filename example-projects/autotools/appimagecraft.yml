@@ -1,0 +1,35 @@
+version: 1
+
+project:
+  name: org.appimage.appimagecraft
+  version: 0.0.1-demo-1
+
+build:
+  autotools:
+    source_dir: .
+    allow_insource: true
+    configure:
+
+scripts:
+  post_build:
+    - touch "$BUILD_DIR"/example.svg
+    - |2
+      cat > "$BUILD_DIR"/example.desktop <<EOF
+      [Desktop Entry]
+      Name=Example
+      Type=Application
+      Terminal=true
+      Categories=Utility;
+      Exec=example
+      Icon=example
+      EOF
+
+
+appimage:
+  linuxdeploy:
+    plugins:
+      #- qt
+      #- conda
+    environment:
+      UPD_INFO: "zsync|http://foo.bar/baz.zsync"
+    extra_args: -i "$BUILD_DIR"/example.svg -d "$BUILD_DIR"/example.desktop
