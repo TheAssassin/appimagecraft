@@ -45,11 +45,12 @@ log "-- Try build command"
 appimagecraft build --build-dir "$WORKDIR"/cmake
 popd
 
+pushd "$REPO_ROOT"/example-projects/autotools
 log "Try out different commands on example autotools command"
 log "-- Try genscripts command"
 appimagecraft genscripts --build-dir "$WORKDIR"/autotools-genscripts
 log "-- Clean up and recreate workdir for next command"
-rm -r "$WORKDIR"/cmake-genscripts
+rm -r "$WORKDIR"/autotools-genscripts
 log "-- Try build command"
 appimagecraft build --build-dir "$WORKDIR"/autotools
 popd
