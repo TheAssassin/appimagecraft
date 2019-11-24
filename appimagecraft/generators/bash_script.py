@@ -15,8 +15,12 @@ class BashScriptGenerator:
     def add_lines(self, lines: List[str]):
         self._lines += lines
 
+        return self
+
     def add_line(self, line: str = ""):
         self._lines.append(line)
+
+        return self
 
     @staticmethod
     def _write_lines(file: TextIO, lines):
