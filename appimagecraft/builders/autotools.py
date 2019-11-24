@@ -91,10 +91,19 @@ class AutotoolsBuilder(BuilderBase):
                 "",
             ])
 
+        if "configure" in self._builder_config:
+            generator.add_lines([
+                "# set up build directory with configure",
+                self._generate_configure_command(project_root_dir),
+                ""
+            ])
+        else:
+            generator.add_lines([
+                "# configure: section not found, not generating configure call (this might be intentional)"
+                ""
+            ])
+
         generator.add_lines([
-            "# set up build directory with configure",
-            self._generate_configure_command(project_root_dir),
-            "",
             "# build project",
             "make -j $(nproc)",
             "",
