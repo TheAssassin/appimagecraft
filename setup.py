@@ -7,7 +7,6 @@ setup(
     license="MIT",
     long_description=open("README.md").read(),
     install_requires=[
-        "requests",
         "PyYAML",
         "coloredlogs",
     ],
