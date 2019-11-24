@@ -14,8 +14,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="appimagecraft -- woo!")
 
     parser.add_argument("-f", "--config-file",
-                        nargs=1, dest="config_file",
-                        help="Path to appimagecraft config",default="appimagecraft.yml")
+                        nargs="?", dest="config_file",
+                        help="Path to appimagecraft config", default="appimagecraft.yml")
 
     parser.add_argument("-b", "--builder",
                         nargs="?", dest="builder_name",
