@@ -13,10 +13,10 @@ class CMakeBuilder(BuilderBase):
     def __init__(self, config: dict = None):
         super().__init__(config)
 
-        for cmake_arg in self._get_configure_extra_variables().keys():
+        for cmake_arg in self._get_cmake_extra_variables().keys():
             self._validate_cmake_arg_name(cmake_arg)
 
-    def _get_configure_extra_variables(self) -> dict:
+    def _get_cmake_extra_variables(self) -> dict:
         default_vars = {
             "CMAKE_INSTALL_PREFIX": "/usr",
             "CMAKE_BUILD_TYPE": "Release",
@@ -59,7 +59,7 @@ class CMakeBuilder(BuilderBase):
     def _generate_cmake_command(self, project_root_dir: str):
         args = ["cmake"]
 
-        for key, value in self._get_configure_extra_variables().items():
+        for key, value in self._get_cmake_extra_variables().items():
             self._validate_cmake_arg_name(key)
 
             escaped_value = shlex.quote(value)
