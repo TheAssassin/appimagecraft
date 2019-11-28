@@ -76,6 +76,32 @@ class CMakeBuilder(BuilderBase):
 
         generator = BashScriptGenerator(script_path)
 
+        # export environment vars listed in config
+        def try_export_env_vars(key_name, raw=False):
+            try:
+                env_config = self._builder_config[key_name]
+            except KeyError:
+                pass
+            else:
+                try:
+                    dict(env_config)
+                except ValueError:
+                    try:
+                        iter(env_config)
+                    except ValueError:
+                        raise ValueError("environment config is in invalid format")
+                    else:
+                        env_config = convert_kv_list_to_dict(env_config)
+
+                generator.add_line("# environment variables from {}".format(key_name))
+                generator.export_env_vars(env_config, raw=raw)
+
+                # add some space between this and the next block
+                generator.add_line()
+
+        try_export_env_vars("environment")
+        try_export_env_vars("raw_environment", raw=True)
+
         generator.add_lines([
             "# make sure we're in the build directory",
             "cd {}".format(shlex.quote(build_dir)),
