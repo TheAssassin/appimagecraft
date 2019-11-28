@@ -11,7 +11,7 @@ class CMakeBuilder(BuilderBase):
     _script_filename = "build-cmake.sh"
 
     def __init__(self, config: dict = None):
-        super().__init__()
+        super().__init__(config)
 
         for cmake_arg in self._get_configure_extra_variables().keys():
             self._validate_cmake_arg_name(cmake_arg)
