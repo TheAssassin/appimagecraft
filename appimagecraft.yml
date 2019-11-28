@@ -28,6 +28,7 @@ scripts:
 
       # add own bin dir as fallback
       # might come in handy if readelf binary is missing on the system (not sure if that's even possible, though)
+      # also makes using bundled shellcheck easier
       export PATH="$PATH":"$this_dir"/usr/bin
 
       "$this_dir"/usr/bin/python -m appimagecraft "$@"
@@ -40,7 +41,7 @@ appimage:
   linuxdeploy:
     plugins:
       - conda
-    extra_args: -i "$BUILD_DIR"/appimagecraft.svg -d "$BUILD_DIR"/appimagecraft.desktop --custom-apprun "$BUILD_DIR"/AppRun.sh
+    extra_args: -i "$BUILD_DIR"/appimagecraft.svg -d "$BUILD_DIR"/appimagecraft.desktop --custom-apprun "$BUILD_DIR"/AppRun.sh -e $(which shellcheck)
     environment:
       PIP_REQUIREMENTS: .
     raw_environment:

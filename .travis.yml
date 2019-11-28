@@ -6,6 +6,10 @@ python:
   - "3.7"
   - "3.8-dev"
 
+install:
+  - wget https://ftp.fau.de/ubuntu/pool/universe/s/shellcheck/shellcheck_0.4.6-1_amd64.deb
+  - sudo dpkg -i *.deb
+
 script:
   - bash -xe ci/build-example-projects.sh
   - if [ "$TRAVIS_PYTHON_VERSION" == "3.6" ]; then bash -xe ci/build-appimage.sh; fi
