@@ -5,7 +5,6 @@ from urllib.parse import urlparse
 
 from appimagecraft._logging import get_logger
 from appimagecraft._util import convert_kv_list_to_dict
-from appimagecraft.validators import ShellCheckValidator, ValidationError
 from .bash_script import BashScriptGenerator
 
 
@@ -142,15 +141,9 @@ class AppImageBuildScriptGenerator:
                         env_config = convert_kv_list_to_dict(env_config)
 
                 gen.add_line("# environment variables from {}".format(key_name))
+                gen.export_env_vars(env_config, raw=raw)
 
-                for env_var, value in dict(env_config).items():
-                    name = shlex.quote(env_var)
-
-                    if not raw:
-                        value = shlex.quote(value)
-
-                    gen.add_line("export {}={}".format(name, value))
-
+                # add some space between this and the next block
                 gen.add_line()
 
         try_export_env_vars("environment")

@@ -1,4 +1,5 @@
 import os
+import shlex
 from typing import List, TextIO
 
 from .._logging import get_logger
@@ -11,6 +12,17 @@ class BashScriptGenerator:
         self._lines = []
 
         self._logger = get_logger("scriptgen")
+
+    def export_env_vars(self, variables: dict = None, raw: bool = False):
+        for env_var, value in dict(variables).items():
+            name = shlex.quote(env_var)
+
+            if not raw:
+                value = shlex.quote(value)
+
+            self.add_line("export {}={}".format(name, value))
+
+        self.add_line()
 
     def add_lines(self, lines: List[str]):
         self._lines += lines
