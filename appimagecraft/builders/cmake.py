@@ -45,17 +45,6 @@ class CMakeBuilder(BuilderBase):
         if " " in name:
             raise ValueError("Spaces are not allowed in CMake argument names")
 
-    def _get_source_dir(self, project_root_dir):
-        source_dir = self._builder_config.get("source_dir", None)
-
-        if not source_dir:
-            return project_root_dir
-
-        if not os.path.isabs(source_dir):
-            source_dir = os.path.join(project_root_dir, source_dir)
-
-        return source_dir
-
     def _generate_cmake_command(self, project_root_dir: str):
         args = ["cmake"]
 
