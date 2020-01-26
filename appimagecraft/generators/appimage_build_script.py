@@ -171,7 +171,7 @@ class AppImageBuildScriptGenerator:
         gen.add_lines([
             "",
             "# move built AppImages to artifacts dir",
-            "find . -type f -iname '*.AppImage' -not -iname 'linuxdeploy*.AppImage' -exec mv '{}' ../artifacts ';'",
+            "find . -type f -iname '*.AppImage*' -not -iname 'linuxdeploy*.AppImage' -exec mv '{}' ../artifacts ';'",
         ])
 
         gen.build_file()
