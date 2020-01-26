@@ -1,6 +1,17 @@
 dist: xenial
 language: python
 
+matrix:
+  include:
+    - name: Python 3.6 (32-bit cross)
+      python: 3.6
+      install:
+        - sudo dpkg --add-architecture i386
+        - sudo apt-get update
+        - sudo apt-get install -y libc6:i386 libstdc++6:i386 libffi6:i386 libgmp10:i386
+        - wget https://ftp.fau.de/ubuntu/pool/universe/s/shellcheck/shellcheck_0.4.6-1_i386.deb
+        - sudo dpkg -i *.deb
+
 python:
   - "3.6"
   - "3.7"
