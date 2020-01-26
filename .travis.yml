@@ -11,6 +11,9 @@ matrix:
         - sudo apt-get install -y libc6:i386 libstdc++6:i386 libffi6:i386 libgmp10:i386
         - wget https://ftp.fau.de/ubuntu/pool/universe/s/shellcheck/shellcheck_0.4.6-1_i386.deb
         - sudo dpkg -i *.deb
+      script:
+        - export ARCH=i386
+        - bash -xe ci/build-appimage.sh
 
 python:
   - "3.6"
