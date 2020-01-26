@@ -29,6 +29,7 @@ script:
   - if [ "$TRAVIS_PYTHON_VERSION" == "3.6" ]; then bash -xe ci/build-appimage.sh; fi
 
 after_success:
+  - if [ "$TRAVIS_BRANCH" != "master" ]; then export TRAVIS_EVENT_TYPE=pull_request; fi
   - |
     if [ "$TRAVIS_PYTHON_VERSION" == "3.6" ]; then
         wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
