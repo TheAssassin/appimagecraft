@@ -13,4 +13,13 @@ virtualenv "$tmpdir" -p $(which python3)
 
 pip install -e .
 
-appimagecraft build
+
+EXTRA_ARGS=()
+
+case "$ARCH" in
+    i386|i686)
+        EXTRA_ARGS=("-f" "appimagecraft-i386.yml")
+        ;;
+esac
+
+appimagecraft build "${EXTRA_ARGS[@]}"
