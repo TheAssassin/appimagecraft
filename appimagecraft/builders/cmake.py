@@ -108,10 +108,14 @@ class CMakeBuilder(BuilderBase):
             "# build project",
             # TODO: use cmake --build somehow, also for install call below
             "make -j $(nproc)",
-            "",
-            "# install binaries into AppDir (requires correct CMake install(...) configuration)",
-            "make install DESTDIR={}".format(shlex.quote(get_appdir_path(build_dir))),
         ])
+
+        if self._builder_config.get("install", True):
+            generator.add_lines([
+                "",
+                "# install binaries into AppDir (requires correct CMake install(...) configuration)",
+                "make install DESTDIR={}".format(shlex.quote(get_appdir_path(build_dir))),
+            ])
 
         # optional support for CPack
         # allows projects to also build packages, making use of appimagecraft features like auto-created clean build
