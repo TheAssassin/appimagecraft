@@ -1,6 +1,7 @@
 import os.path
 import re
 import shlex
+from typing import Union
 
 from ..generators.bash_script import BashScriptGenerator
 from .._util import get_appdir_path, convert_kv_list_to_dict
@@ -130,7 +131,7 @@ class CMakeBuilder(BuilderBase):
                 "# build packages with cpack",
             ])
 
-            cpack_generators: dict = None
+            cpack_generators: Union[dict, None] = None
 
             if cpack_args is not None:
                 cpack_generators: dict = cpack_args.get("generators")
