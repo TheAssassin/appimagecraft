@@ -108,7 +108,17 @@ class CMakeBuilder(BuilderBase):
             "",
             "# build project",
             # TODO: use cmake --build somehow, also for install call below
-            "make -j $(nproc)",
+            "# support for the $JOBS environment variable",
+            "# in case $JOBS is not specified, we guess a value",
+            "# we reserve one core outside CI environments",
+            "if [[ -z \"$JOBS\" ]]; then",
+            "    if [[ -z \"$CI\" ]]; then",
+            "        JOBS=\"$(nproc --ignore=1)\"",
+            "    else",
+            "        JOBS=\"$(nproc)\"",
+            "    fi",
+            "fi",
+            "make -j \"$JOBS\"",
         ])
 
         if self._builder_config.get("install", True):
