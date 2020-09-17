@@ -2,7 +2,7 @@ import os.path
 import shlex
 
 from appimagecraft.validators import ShellCheckValidator, ValidationError
-from ..builders import CMakeBuilder, AutotoolsBuilder, QMakeBuilder
+from ..builders import CMakeBuilder, AutotoolsBuilder, QMakeBuilder, ScriptBuilder
 from .._logging import get_logger
 from .._util import convert_kv_list_to_dict
 from . import BashScriptGenerator, AppImageBuildScriptGenerator, PrePostBuildScriptsGenerator
@@ -138,6 +138,7 @@ class AllBuildScriptsGenerator:
             "cmake": CMakeBuilder,
             "autotools": AutotoolsBuilder,
             "qmake": QMakeBuilder,
+            "script": ScriptBuilder,
         }
 
         build_scripts = {}
