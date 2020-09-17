@@ -13,14 +13,17 @@ class BashScriptGenerator:
 
         self._logger = get_logger("scriptgen")
 
+    def export_env_var(self, name: str, value: str, raw: bool = False):
+        name = shlex.quote(name)
+
+        if not raw:
+            value= shlex.quote(value)
+
+        self.add_line("export {}={}".format(name, value))
+
     def export_env_vars(self, variables: dict = None, raw: bool = False):
         for env_var, value in dict(variables).items():
-            name = shlex.quote(env_var)
-
-            if not raw:
-                value = shlex.quote(value)
-
-            self.add_line("export {}={}".format(name, value))
+            self.export_env_var(env_var, value, raw=raw)
 
         self.add_line()
 
