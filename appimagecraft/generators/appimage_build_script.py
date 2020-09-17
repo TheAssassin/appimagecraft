@@ -72,6 +72,8 @@ class AppImageBuildScriptGenerator:
             "qt": build_official_plugin_url("qt"),
             "conda": "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-conda/master/"
                      "linuxdeploy-plugin-conda.sh",
+            "gtk": "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/"
+                   "linuxdeploy-plugin-gtk.sh",
         }
 
         ld_plugins = {}
