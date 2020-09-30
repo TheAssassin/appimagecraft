@@ -25,6 +25,8 @@ class BuildCommand(CommandBase):
         return gen
 
     def run(self):
+        failed = False
+
         try:
             self._logger.info("Generating build scripts in {}".format(self._build_dir))
 
@@ -58,10 +60,15 @@ class BuildCommand(CommandBase):
 
         except subprocess.CalledProcessError as e:
             self._logger.critical("Build script returned non-zero exit status {}".format(e.returncode))
+            failed = True
 
         except Exception as e:
             self._logger.exception(e)
+            failed = True
 
         finally:
             self._logger.info("Cleaning up build directory")
             shutil.rmtree(self._build_dir)
+
+        if failed:
+            sys.exit(1)
