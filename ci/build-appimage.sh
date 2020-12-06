@@ -8,7 +8,7 @@ tmpdir=$(mktemp -d appimagecraft-XXXXXX)
 cleanup() { rm -r "$tmpdir" ; }
 trap cleanup EXIT
 
-virtualenv "$tmpdir" -p $(which python3)
+"${PYTHON:-python3}" -m venv "$tmpdir"
 . "$tmpdir"/bin/activate
 
 pip install -e .

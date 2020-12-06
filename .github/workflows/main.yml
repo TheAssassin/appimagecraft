@@ -1,0 +1,145 @@
+name: Main pipeline
+
+on: [push, pull_request]
+
+env:
+  APPIMAGE_EXTRACT_AND_RUN: 1
+  TERM: xterm-256color
+
+jobs:
+  python36:
+    name: Test against Python 3.6
+    runs-on: ubuntu-18.04
+    env:
+      PYTHON: python3.6
+    steps:
+      - name: Install Python 3.6
+        run: |
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3.6-minimal python3.6-venv
+      - uses: actions/checkout@v2
+      - name: Build example projects
+        run: bash -xe ci/build-example-projects.sh
+
+  python37:
+    name: Test against Python 3.7
+    runs-on: ubuntu-18.04
+    env:
+      PYTHON: python3.7
+    steps:
+      - name: Install Python 3.7
+        run: |
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3.7-minimal python3.7-venv
+      - uses: actions/checkout@v2
+      - name: Build example projects
+        run: bash -xe ci/build-example-projects.sh
+
+  python38:
+    name: Test against Python 3.8
+    runs-on: ubuntu-18.04
+    env:
+      PYTHON: python3.8
+    steps:
+      - name: Install Python 3.8
+        run: |
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3.8-minimal python3.8-venv
+      - uses: actions/checkout@v2
+      - name: Build example projects
+        run: bash -xe ci/build-example-projects.sh
+
+  python39:
+    name: Test against Python 3.9
+    runs-on: ubuntu-18.04
+    env:
+      PYTHON: python3.9
+    steps:
+      - name: Install Python 3.9
+        run: |
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3.9-minimal python3.9-venv
+      - uses: actions/checkout@v2
+      - name: Build example projects
+        run: bash -xe ci/build-example-projects.sh
+
+  python310:
+    name: Test against Python 3.10
+    runs-on: ubuntu-18.04
+    env:
+      PYTHON: python3.10
+    steps:
+      - name: Install Python 3.10
+        run: |
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3.10-minimal python3.10-venv
+      - uses: actions/checkout@v2
+      - name: Build example projects
+        run: bash -xe ci/build-example-projects.sh
+
+  appimage-x86_64:
+    name: Build AppImage for x86_64
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build AppImage
+        run: |
+          export ARCH=x86_64
+          bash -xe ci/build-appimage.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: AppImage x86_64
+          path: appimagecraft*.AppImage*
+
+  appimage-i386:
+    name: Build AppImage for i386 (cross)
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y libc6:i386 libstdc++6:i386 libffi6:i386 libgmp10:i386 zlib1g:i386 libfuse2:i386
+          wget https://ftp.fau.de/ubuntu/pool/universe/s/shellcheck/shellcheck_0.4.6-1_i386.deb
+          sudo dpkg -i *.deb
+      - name: Build AppImage
+        run: |
+          export ARCH=i386
+          bash -xe ci/build-appimage.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: AppImage i386
+          path: appimagecraft*.AppImage*
+
+  upload:
+    name: Create release and upload artifacts
+    runs-on: ubuntu-18.04
+    needs:
+      - python36
+      - python37
+      - python38
+      - appimage-x86_64
+      - appimage-i386
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      - name: Inspect directory after downloading artifacts
+        run: ls -alFR
+      - name: Create release and upload artifacts
+        uses: marvinpinto/action-automatic-releases@latest
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "continuous"
+          prerelease: true
+          title: "Continuous build"
+          files: |
+            **/appimagecraft*.AppImage*

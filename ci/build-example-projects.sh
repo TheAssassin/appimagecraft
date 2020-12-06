@@ -27,9 +27,9 @@ REPO_ROOT=$(readlink -f $(dirname "$0")/..)
 
 pushd "$WORKDIR"
 
-log "Create virtualenvironment and install appimagecraft"
+log "Create virtual environment and install appimagecraft"
 
-virtualenv -p $(which python3) venv
+"${PYTHON:-python3}" -m venv venv
 . venv/bin/activate
 
 pip install "$REPO_ROOT"
