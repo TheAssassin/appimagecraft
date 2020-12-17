@@ -48,6 +48,9 @@ class BashScriptGenerator:
             "# make sure to quit on errors in subcommands",
             "set -e",
             "",
+            "# if $VERBOSE is set to a value, print all commands (useful for debugging)",
+            '[[ "$VERBOSE" != "" ]] && set -x',
+            "",
         ])
 
     def build_file(self):
