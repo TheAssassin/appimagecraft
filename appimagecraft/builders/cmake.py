@@ -35,6 +35,15 @@ class CMakeBuilder(BuilderBase):
 
         return rv
 
+    def _get_cmake_raw_extra_variables(self) -> dict:
+        data = self._builder_config.get("raw_extra_variables", None) or {}
+
+        # allow for KEY=Value scheme for extra_variables
+        if isinstance(data, list):
+            data = convert_kv_list_to_dict(data)
+
+        return data
+
     @staticmethod
     def from_dict(data: dict):
         # TODO!
@@ -51,10 +60,12 @@ class CMakeBuilder(BuilderBase):
 
         for key, value in self._get_cmake_extra_variables().items():
             self._validate_cmake_arg_name(key)
-
             escaped_value = shlex.quote(value)
-
             args.append("-D{}={}".format(key, escaped_value))
+
+        for key, value in self._get_cmake_raw_extra_variables().items():
+            self._validate_cmake_arg_name(key)
+            args.append("-D{}={}".format(key, value))
 
         source_dir = self._get_source_dir(project_root_dir)
         args.append(source_dir)
