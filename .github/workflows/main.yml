@@ -11,7 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        PYTHON_VERSION: [3.6, 3.7, 3.8, 3.9, 3.10]
+        # apparently these are interpreted as floats, so we have to wrap them in quotes
+        PYTHON_VERSION: ["3.6", "3.7", "3.8", "3.9", "3.10"]
     name: Test against Python ${{ matrix.PYTHON_VERSION }}
     runs-on: ubuntu-18.04
     env:
