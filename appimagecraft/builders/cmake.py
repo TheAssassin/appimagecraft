@@ -21,6 +21,8 @@ class CMakeBuilder(BuilderBase):
         default_vars = {
             "CMAKE_INSTALL_PREFIX": "/usr",
             "CMAKE_BUILD_TYPE": "Release",
+            # GNUInstallDirs could set this to a different value otherwise
+            "CMAKE_INSTALL_LIBDIR": "/usr/lib",
         }
 
         data = self._builder_config.get("extra_variables", None) or {}
