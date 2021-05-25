@@ -68,13 +68,24 @@ class AppImageBuildScriptGenerator:
             return "https://github.com/linuxdeploy/linuxdeploy-plugin-{name}" \
                    "/releases/download/continuous/{filename}".format(name=name, filename=filename)
 
+        def build_official_shell_script_plugin_url(name: str):
+            return f"https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-{name}/master/" \
+                   f"linuxdeploy-plugin-{name}.sh"
+
+        def build_official_misc_plugin_url(name: str):
+            return f"https://raw.githubusercontent.com/linuxdeploy/misc-plugins/master/{name}/" \
+                   f"linuxdeploy-plugin-{name}.sh"
+
         known_plugin_urls = {
             "qt": build_official_plugin_url("qt"),
-            "conda": "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-conda/master/"
-                     "linuxdeploy-plugin-conda.sh",
-            "gtk": "https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/"
-                   "linuxdeploy-plugin-gtk.sh",
         }
+
+        for plugin_name in ["conda", "gtk", "perl", "gstreamer", "ncurses"]:
+            known_plugin_urls[plugin_name] = build_official_shell_script_plugin_url(plugin_name)
+
+        for misc_plugin_name in ["gdb", "gettext"]:
+            known_plugin_urls[misc_plugin_name] = build_official_misc_plugin_url(plugin_name)
+
 
         ld_plugins = {}
 
