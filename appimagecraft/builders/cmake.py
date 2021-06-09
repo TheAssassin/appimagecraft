@@ -109,6 +109,14 @@ class CMakeBuilder(BuilderBase):
             "# make sure we're in the build directory",
             "cd {}".format(shlex.quote(build_dir)),
             "",
+        ])
+
+        if "script" in self._builder_config:
+            generator.add_line("# optional script")
+            generator.add_lines(self._builder_config["script"])
+            generator.add_line("")
+
+        generator.add_lines([
             "# build in separate directory to avoid a mess in the build dir",
             "mkdir -p cmake-build",
             "cd cmake-build",
