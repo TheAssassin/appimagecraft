@@ -1,3 +1,4 @@
+import os
 import platform
 import re
 import shlex
@@ -20,7 +21,10 @@ class AppImageBuildScriptGenerator:
     def build_file(self, path: str):
         gen = BashScriptGenerator(path)
 
-        arch = self._config.get("arch", platform.machine())
+        if "ARCH" in os.environ:
+            arch = os.environ["ARCH"]
+        else:
+            arch = self._config.get("arch", platform.machine())
 
         valid_archs = ["x86_64", "i386"]
 
@@ -50,10 +54,11 @@ class AppImageBuildScriptGenerator:
         ])
 
         # export architecture, might be used by some people
-        gen.add_lines([
-            "export ARCH={}".format(shlex.quote(arch)),
-            "",
-        ])
+        if "ARCH" not in os.environ:
+            gen.add_lines([
+                "export ARCH={}".format(shlex.quote(arch)),
+                "",
+            ])
 
         gen.add_lines([
             "# fetch linuxdeploy from GitHub releases",
