@@ -47,6 +47,7 @@ class BashScriptGenerator:
             "",
             "# make sure to quit on errors in subcommands",
             "set -e",
+            "set -o pipefail",
             "",
             "# if $VERBOSE is set to a value, print all commands (useful for debugging)",
             '[[ "$VERBOSE" != "" ]] && set -x',
