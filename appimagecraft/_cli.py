@@ -11,7 +11,9 @@ from .commands import *  # noqa
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="appimagecraft -- woo!")
+    parser = argparse.ArgumentParser(
+        description="Shell script generator for building AppImages from simple declarative configuration files"
+    )
 
     parser.add_argument(
         "-f",
