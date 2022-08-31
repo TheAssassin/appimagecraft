@@ -2,7 +2,7 @@ import glob
 import os.path
 import shlex
 
-from ..generators.bash_script import BashScriptGenerator
+from ..generators.bash_script import BashScriptBuilder
 from .._util import get_appdir_path, convert_kv_list_to_dict
 from . import BuilderBase
 from .._logging import get_logger
@@ -49,7 +49,7 @@ class QMakeBuilder(BuilderBase):
     def generate_build_script(self, project_root_dir: str, build_dir: str) -> str:
         script_path = os.path.join(build_dir, self.__class__._script_filename)
 
-        generator = BashScriptGenerator(script_path)
+        generator = BashScriptBuilder(script_path)
 
         # export environment vars listed in config
         def try_export_env_vars(key_name, raw=False):

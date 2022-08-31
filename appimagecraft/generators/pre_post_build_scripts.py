@@ -2,7 +2,7 @@ import os.path
 
 from typing import List
 
-from .bash_script import BashScriptGenerator
+from .bash_script import BashScriptBuilder
 
 
 class PrePostBuildScriptsGenerator:
@@ -14,7 +14,7 @@ class PrePostBuildScriptsGenerator:
 
     def build_files(self, build_dir: str):
         def write_build_script(path: str, lines: List[str]):
-            gen = BashScriptGenerator(path)
+            gen = BashScriptBuilder(path)
             gen.add_lines(lines)
             gen.build_file()
 

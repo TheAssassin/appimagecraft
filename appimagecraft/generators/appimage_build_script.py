@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from appimagecraft._logging import get_logger
 from appimagecraft._util import convert_kv_list_to_dict
-from .bash_script import BashScriptGenerator
+from .bash_script import BashScriptBuilder
 
 
 class AppImageBuildScriptGenerator:
@@ -18,7 +18,7 @@ class AppImageBuildScriptGenerator:
         self._logger = get_logger("scriptgen")
 
     def build_file(self, path: str):
-        gen = BashScriptGenerator(path)
+        gen = BashScriptBuilder(path)
 
         arch = self._config.get("arch", platform.machine())
 

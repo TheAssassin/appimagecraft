@@ -5,13 +5,17 @@ from appimagecraft.validators import ShellCheckValidator, ValidationError
 from ..builders import CMakeBuilder, AutotoolsBuilder, QMakeBuilder, ScriptBuilder
 from .._logging import get_logger
 from .._util import convert_kv_list_to_dict
-from . import BashScriptGenerator, AppImageBuildScriptGenerator, PrePostBuildScriptsGenerator
+from . import (
+    ProjectAwareBashScriptBuilder,
+    AppImageBuildScriptGenerator,
+    PrePostBuildScriptsGenerator,
+)
 
 
 class AllBuildScriptsGenerator:
     def __init__(self, config: dict, project_root_dir: str, builder_name: str):
         self._config = config
-        
+
         self._project_root_dir = project_root_dir
         self._builder_name = builder_name
 
@@ -22,13 +26,9 @@ class AllBuildScriptsGenerator:
 
         main_script_path = os.path.join(build_dir, "build.sh")
 
-        main_script_gen = BashScriptGenerator(main_script_path)
-
-        # export PROJECT_ROOT and BUILD_DIR so they can be used by scripts etc.
-        # convenience feature
-        main_script_gen.add_line("# convenience variables, may be used in config file")
-        main_script_gen.export_env_var("PROJECT_ROOT", self._project_root_dir)
-        main_script_gen.export_env_var("BUILD_DIR", build_dir)
+        main_script_gen = ProjectAwareBashScriptBuilder(
+            main_script_path, self._project_root_dir, build_dir
+        )
 
         # $VERSION is used by various tools and may also be picked up by the build system of the target app
         project_version = project_config.get("version")
@@ -88,7 +88,8 @@ class AllBuildScriptsGenerator:
         # also, it's much cleaner to build with different builders in separate directory
         if build_scripts:
             main_script_gen.add_line(
-                "# additional available builders (call appimagecraft with --builder <name> to switch)")
+                "# additional available builders (call appimagecraft with --builder <name> to switch)"
+            )
 
             for builder_name, script in build_scripts.items():
 

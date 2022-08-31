@@ -1,7 +1,7 @@
 import os.path
 import shlex
 
-from ..generators.bash_script import BashScriptGenerator
+from ..generators.bash_script import BashScriptBuilder
 from .._util import get_appdir_path
 from . import BuilderBase
 
@@ -58,7 +58,7 @@ class AutotoolsBuilder(BuilderBase):
     def generate_build_script(self, project_root_dir: str, build_dir: str) -> str:
         script_path = os.path.join(build_dir, self.__class__._script_filename)
 
-        generator = BashScriptGenerator(script_path)
+        generator = BashScriptBuilder(script_path)
 
         generator.add_lines([
             "# make sure we're in the build directory",
