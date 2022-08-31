@@ -17,9 +17,10 @@ class BashScriptGenerator:
         name = shlex.quote(name)
 
         if not raw:
-            value= shlex.quote(value)
+            value = shlex.quote(value)
 
-        self.add_line("export {}={}".format(name, value))
+        self.add_line("{}={}".format(name, value))
+        self.add_line("export {}".format(name, value))
 
     def export_env_vars(self, variables: dict = None, raw: bool = False):
         for env_var, value in dict(variables).items():
