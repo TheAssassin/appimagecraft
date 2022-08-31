@@ -24,25 +24,20 @@ class AllBuildScriptsGenerator:
 
         main_script_gen = BashScriptGenerator(main_script_path)
 
-        def export_variable(var_name, var_value):
-            # fixes shellcheck warning SC2155
-            main_script_gen.add_line("{}={}".format(var_name, var_value))
-            main_script_gen.add_line("export {}".format(var_name))
-
         # export PROJECT_ROOT and BUILD_DIR so they can be used by scripts etc.
         # convenience feature
         main_script_gen.add_line("# convenience variables, may be used in config file")
-        export_variable("PROJECT_ROOT", shlex.quote(self._project_root_dir))
-        export_variable("BUILD_DIR", shlex.quote(build_dir))
+        main_script_gen.export_env_var("PROJECT_ROOT", self._project_root_dir)
+        main_script_gen.export_env_var("BUILD_DIR", build_dir)
 
         # $VERSION is used by various tools and may also be picked up by the build system of the target app
         project_version = project_config.get("version")
         if project_version is not None:
-            export_variable("VERSION", shlex.quote(project_version))
+            main_script_gen.export_env_var("VERSION", project_version)
         else:
             project_version_cmd = project_config.get("version_command")
             if project_version_cmd is not None:
-                export_variable("VERSION", "$({})".format(project_version_cmd))
+                main_script_gen.export_env_var("VERSION", "$({})".format(project_version_cmd), raw=True)
 
         main_script_gen.add_line()
 
@@ -54,7 +49,7 @@ class AllBuildScriptsGenerator:
                 build_env_vars = convert_kv_list_to_dict(build_env_vars)
 
             for k, v in build_env_vars.items():
-                export_variable(k, v)
+                main_script_gen.export_env_var(k, v)
 
             main_script_gen.add_line()
 
