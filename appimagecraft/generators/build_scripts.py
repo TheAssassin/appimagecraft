@@ -26,9 +26,7 @@ class AllBuildScriptsGenerator:
 
         main_script_path = os.path.join(build_dir, "build.sh")
 
-        main_script_gen = ProjectAwareBashScriptBuilder(
-            main_script_path, self._project_root_dir, build_dir
-        )
+        main_script_gen = ProjectAwareBashScriptBuilder(main_script_path, self._project_root_dir, build_dir)
 
         # $VERSION is used by various tools and may also be picked up by the build system of the target app
         project_version = project_config.get("version")
@@ -54,30 +52,34 @@ class AllBuildScriptsGenerator:
             main_script_gen.add_line()
 
         # header
-        main_script_gen.add_lines([
-            "# make sure to be in the build dir",
-            "cd {}".format(shlex.quote(build_dir)),
-            "",
-            "# create artifacts directory (called scripts shall put their build results into this directory)",
-            "[ ! -d artifacts ] && mkdir artifacts",
-            "",
-            "# call pre-build script (if available)",
-            "[ -f pre_build.sh ] && bash pre_build.sh",
-            "",
-            "# create AppDir so that tools which are sensitive to that won't complain",
-            "mkdir -p AppDir",
-            "",
-        ])
+        main_script_gen.add_lines(
+            [
+                "# make sure to be in the build dir",
+                "cd {}".format(shlex.quote(build_dir)),
+                "",
+                "# create artifacts directory (called scripts shall put their build results into this directory)",
+                "[ ! -d artifacts ] && mkdir artifacts",
+                "",
+                "# call pre-build script (if available)",
+                "[ -f pre_build.sh ] && bash pre_build.sh",
+                "",
+                "# create AppDir so that tools which are sensitive to that won't complain",
+                "mkdir -p AppDir",
+                "",
+            ]
+        )
 
         if self._is_null_builder(self._builder_name):
             get_logger().debug("skipping generation of entry for null builder as main builder in main script")
         else:
             # add entry for main builder
             # use subshell to set SHLVL properly, which makes output with -x prettier
-            main_script_gen.add_lines([
-                "# call script for main builder {}".format(self._builder_name),
-                "(source {})".format(build_scripts[self._builder_name]),
-            ])
+            main_script_gen.add_lines(
+                [
+                    "# call script for main builder {}".format(self._builder_name),
+                    "(source {})".format(build_scripts[self._builder_name]),
+                ]
+            )
 
             # handled that one already
             del build_scripts[self._builder_name]
@@ -102,12 +104,14 @@ class AllBuildScriptsGenerator:
                 main_script_gen.add_line("# script for builder {}".format(builder_name))
                 main_script_gen.add_line("#source {}\n".format(script))
 
-        main_script_gen.add_lines([
-            "",
-            "# call post-build script (if available)",
-            "[ -f post_build.sh ] && (source post_build.sh)",
-            "",
-        ])
+        main_script_gen.add_lines(
+            [
+                "",
+                "# call post-build script (if available)",
+                "[ -f post_build.sh ] && (source post_build.sh)",
+                "",
+            ]
+        )
 
         # set up AppImage build script
         appimage_build_config = self._config.get("appimage", None)

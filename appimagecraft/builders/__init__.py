@@ -18,4 +18,9 @@ def get_builder_by_name(name: str, config: dict) -> BuilderBase:
     raise ValueError("could not find matching builder for name: {}".format(name))
 
 
-__all__ = ("CMakeBuilder", "QMakeBuilder", "ScriptBuilder", "get_builder_by_name",)
+__all__ = (
+    "CMakeBuilder",
+    "QMakeBuilder",
+    "ScriptBuilder",
+    "get_builder_by_name",
+)

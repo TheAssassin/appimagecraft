@@ -14,9 +14,15 @@ PyYAML = "^6.0"
 coloredlogs = "^15.0.1"
 
 [tool.poetry.dev-dependencies]
-black = "^22.6.0"
+black = {extras = ["d"], version = "^22.6.0"}
 isort = "^5.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"

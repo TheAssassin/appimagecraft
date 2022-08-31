@@ -19,7 +19,7 @@ class AutotoolsBuilder(BuilderBase):
         if not configure_config:
             configure_config = dict()
 
-        extra_params = configure_config.get("extra_params",  [])
+        extra_params = configure_config.get("extra_params", [])
 
         rv = list(default_params)
         rv += extra_params
@@ -60,56 +60,60 @@ class AutotoolsBuilder(BuilderBase):
 
         generator = BashScriptBuilder(script_path)
 
-        generator.add_lines([
-            "# make sure we're in the build directory",
-            "cd {}".format(shlex.quote(build_dir)),
-            "",
-            "# build in separate directory to avoid a mess in the build dir",
-            "mkdir -p autotools-build",
-            "cd autotools-build",
-            "",
-        ])
+        generator.add_lines(
+            [
+                "# make sure we're in the build directory",
+                "cd {}".format(shlex.quote(build_dir)),
+                "",
+                "# build in separate directory to avoid a mess in the build dir",
+                "mkdir -p autotools-build",
+                "cd autotools-build",
+                "",
+            ]
+        )
 
         autogen_path = os.path.join(self._get_source_dir(project_root_dir), "autogen.sh")
 
         if self._builder_config.get("allow_insource"):
-            generator.add_lines([
-                "# in case the project uses autogen.sh, we have to call that script to generate the configure script",
-                "[ -f {0} ] && (cd {1} && {0})".format(
-                    shlex.quote(autogen_path),
-                    shlex.quote(os.path.dirname(autogen_path))
-                ),
-                "",
-            ])
+            generator.add_lines(
+                [
+                    "# in case the project uses autogen.sh, we have to call that script to generate the configure script",
+                    "[ -f {0} ] && (cd {1} && {0})".format(
+                        shlex.quote(autogen_path), shlex.quote(os.path.dirname(autogen_path))
+                    ),
+                    "",
+                ]
+            )
         else:
-            generator.add_lines([
-                "# the user needs to explicitly allow in source operations in order to be able to auto call autogen.sh",
-                "if [ -f {0} ]; then",
-                "    echo \"Warning: autogen.sh found, might have to be called by us\""
-                "    echo \"f so please add allow_insource: true to the autotools builder config\"",
-                "fi",
-                "",
-            ])
+            generator.add_lines(
+                [
+                    "# the user needs to explicitly allow in source operations in order to be able to auto call autogen.sh",
+                    "if [ -f {0} ]; then",
+                    '    echo "Warning: autogen.sh found, might have to be called by us"'
+                    '    echo "f so please add allow_insource: true to the autotools builder config"',
+                    "fi",
+                    "",
+                ]
+            )
 
         if "configure" in self._builder_config:
-            generator.add_lines([
-                "# set up build directory with configure",
-                self._generate_configure_command(project_root_dir),
-                ""
-            ])
+            generator.add_lines(
+                ["# set up build directory with configure", self._generate_configure_command(project_root_dir), ""]
+            )
         else:
-            generator.add_lines([
-                "# configure: section not found, not generating configure call (this might be intentional)"
-                ""
-            ])
+            generator.add_lines(
+                ["# configure: section not found, not generating configure call (this might be intentional)" ""]
+            )
 
-        generator.add_lines([
-            "# build project",
-            "make -j $(nproc)",
-            "",
-            "# install binaries into AppDir (requires correct CMake install(...) configuration)",
-            "make install DESTDIR={}".format(shlex.quote(get_appdir_path(build_dir))),
-        ])
+        generator.add_lines(
+            [
+                "# build project",
+                "make -j $(nproc)",
+                "",
+                "# install binaries into AppDir (requires correct CMake install(...) configuration)",
+                "make install DESTDIR={}".format(shlex.quote(get_appdir_path(build_dir))),
+            ]
+        )
 
         generator.build_file()
 

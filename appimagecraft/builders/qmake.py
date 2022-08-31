@@ -34,7 +34,9 @@ class QMakeBuilder(BuilderBase):
             try:
                 project_file = glob.glob(os.path.join(source_dir, "*.pro"))[0]
             except IndexError:
-                raise RuntimeError("Could not find QMake project file in source dir, please specify a different source_dir or a project_file")
+                raise RuntimeError(
+                    "Could not find QMake project file in source dir, please specify a different source_dir or a project_file"
+                )
             else:
                 self._logger.warn("project_file not specified, using first found .pro file: %s" % project_file)
 
@@ -77,26 +79,28 @@ class QMakeBuilder(BuilderBase):
         try_export_env_vars("environment")
         try_export_env_vars("raw_environment", raw=True)
 
-        generator.add_lines([
-            "# make sure we're in the build directory",
-            "cd {}".format(shlex.quote(build_dir)),
-            "",
-            "# build in separate directory to avoid a mess in the build dir",
-            "mkdir -p qmake-build",
-            "cd qmake-build",
-            "",
-            "# it's always a good idea to print the qmake version in use",
-            "qmake --version",
-            "",
-            "# set up build",
-            self._qenerate_qmake_command(project_root_dir),
-            "",
-            "# build project",
-            "make -j $(nproc)",
-            "",
-            "# install binaries into AppDir (requires correct qmake install(...) configuration)",
-            "make install INSTALL_ROOT={}".format(shlex.quote(get_appdir_path(build_dir))),
-        ])
+        generator.add_lines(
+            [
+                "# make sure we're in the build directory",
+                "cd {}".format(shlex.quote(build_dir)),
+                "",
+                "# build in separate directory to avoid a mess in the build dir",
+                "mkdir -p qmake-build",
+                "cd qmake-build",
+                "",
+                "# it's always a good idea to print the qmake version in use",
+                "qmake --version",
+                "",
+                "# set up build",
+                self._qenerate_qmake_command(project_root_dir),
+                "",
+                "# build project",
+                "make -j $(nproc)",
+                "",
+                "# install binaries into AppDir (requires correct qmake install(...) configuration)",
+                "make install INSTALL_ROOT={}".format(shlex.quote(get_appdir_path(build_dir))),
+            ]
+        )
 
         generator.build_file()
 

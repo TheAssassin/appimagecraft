@@ -38,43 +38,57 @@ class AppImageBuildScriptGenerator:
         if arch not in valid_archs:
             raise ValueError("Invalid arch: {}".format(arch))
 
-        url = "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/" \
-              "linuxdeploy-{}.AppImage".format(arch)
+        url = (
+            "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/"
+            "linuxdeploy-{}.AppImage".format(arch)
+        )
 
         # change to custom directory
-        gen.add_lines([
-            "# switch to separate build dir",
-            "mkdir -p appimage-build",
-            "cd appimage-build",
-            "",
-        ])
+        gen.add_lines(
+            [
+                "# switch to separate build dir",
+                "mkdir -p appimage-build",
+                "cd appimage-build",
+                "",
+            ]
+        )
 
         # export architecture, might be used by some people
-        gen.add_lines([
-            "export ARCH={}".format(shlex.quote(arch)),
-            "",
-        ])
+        gen.add_lines(
+            [
+                "export ARCH={}".format(shlex.quote(arch)),
+                "",
+            ]
+        )
 
-        gen.add_lines([
-            "# fetch linuxdeploy from GitHub releases",
-            "wget -c {}".format(shlex.quote(url)),
-            "chmod +x linuxdeploy-{}.AppImage".format(arch),
-        ])
+        gen.add_lines(
+            [
+                "# fetch linuxdeploy from GitHub releases",
+                "wget -c {}".format(shlex.quote(url)),
+                "chmod +x linuxdeploy-{}.AppImage".format(arch),
+            ]
+        )
 
         def build_official_plugin_url(name: str, filename: str = None):
             if filename is None:
                 filename = "linuxdeploy-plugin-{name}-$ARCH.AppImage".format(name=name)
 
-            return "https://github.com/linuxdeploy/linuxdeploy-plugin-{name}" \
-                   "/releases/download/continuous/{filename}".format(name=name, filename=filename)
+            return (
+                "https://github.com/linuxdeploy/linuxdeploy-plugin-{name}"
+                "/releases/download/continuous/{filename}".format(name=name, filename=filename)
+            )
 
         def build_official_shell_script_plugin_url(name: str):
-            return f"https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-{name}/master/" \
-                   f"linuxdeploy-plugin-{name}.sh"
+            return (
+                f"https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-{name}/master/"
+                f"linuxdeploy-plugin-{name}.sh"
+            )
 
         def build_official_misc_plugin_url(name: str):
-            return f"https://raw.githubusercontent.com/linuxdeploy/misc-plugins/master/{name}/" \
-                   f"linuxdeploy-plugin-{name}.sh"
+            return (
+                f"https://raw.githubusercontent.com/linuxdeploy/misc-plugins/master/{name}/"
+                f"linuxdeploy-plugin-{name}.sh"
+            )
 
         known_plugin_urls = {
             "qt": build_official_plugin_url("qt"),
@@ -85,7 +99,6 @@ class AppImageBuildScriptGenerator:
 
         for misc_plugin_name in ["gdb", "gettext"]:
             known_plugin_urls[misc_plugin_name] = build_official_misc_plugin_url(plugin_name)
-
 
         ld_plugins = {}
 
@@ -128,11 +141,13 @@ class AppImageBuildScriptGenerator:
             # allow for inserting plugin architecture dynamically
             plugin_url = plugin_url.replace("$ARCH", arch)
 
-            gen.add_lines([
-                "# fetch {} plugin".format(plugin_name),
-                "wget -c {}".format(shlex.quote(plugin_url)),
-                "chmod +x linuxdeploy-plugin-{}*".format(shlex.quote(plugin_name))
-            ])
+            gen.add_lines(
+                [
+                    "# fetch {} plugin".format(plugin_name),
+                    "wget -c {}".format(shlex.quote(plugin_url)),
+                    "chmod +x linuxdeploy-plugin-{}*".format(shlex.quote(plugin_name)),
+                ]
+            )
 
         gen.add_line()
 
@@ -181,10 +196,12 @@ class AppImageBuildScriptGenerator:
 
         gen.add_line(" ".join(ld_command))
 
-        gen.add_lines([
-            "",
-            "# move built AppImages to artifacts dir",
-            "find . -type f -iname '*.AppImage*' -not -iname 'linuxdeploy*.AppImage' -exec mv '{}' ../artifacts ';'",
-        ])
+        gen.add_lines(
+            [
+                "",
+                "# move built AppImages to artifacts dir",
+                "find . -type f -iname '*.AppImage*' -not -iname 'linuxdeploy*.AppImage' -exec mv '{}' ../artifacts ';'",
+            ]
+        )
 
         gen.build_file()

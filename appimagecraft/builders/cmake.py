@@ -105,41 +105,45 @@ class CMakeBuilder(BuilderBase):
         try_export_env_vars("environment")
         try_export_env_vars("raw_environment", raw=True)
 
-        generator.add_lines([
-            "# make sure we're in the build directory",
-            "cd {}".format(shlex.quote(build_dir)),
-            "",
-            "# build in separate directory to avoid a mess in the build dir",
-            "mkdir -p cmake-build",
-            "cd cmake-build",
-            "",
-            "# it's always a good idea to print the CMake version in use",
-            "cmake --version",
-            "",
-            "# set up build",
-            self._generate_cmake_command(project_root_dir),
-            "",
-            "# build project",
-            # TODO: use cmake --build somehow, also for install call below
-            "# support for the $JOBS environment variable",
-            "# in case $JOBS is not specified, we guess a value",
-            "# we reserve one core outside CI environments",
-            "if [[ -z \"$JOBS\" ]]; then",
-            "    if [[ -z \"$CI\" ]]; then",
-            "        JOBS=\"$(nproc --ignore=1)\"",
-            "    else",
-            "        JOBS=\"$(nproc)\"",
-            "    fi",
-            "fi",
-            "make -j \"$JOBS\"",
-        ])
+        generator.add_lines(
+            [
+                "# make sure we're in the build directory",
+                "cd {}".format(shlex.quote(build_dir)),
+                "",
+                "# build in separate directory to avoid a mess in the build dir",
+                "mkdir -p cmake-build",
+                "cd cmake-build",
+                "",
+                "# it's always a good idea to print the CMake version in use",
+                "cmake --version",
+                "",
+                "# set up build",
+                self._generate_cmake_command(project_root_dir),
+                "",
+                "# build project",
+                # TODO: use cmake --build somehow, also for install call below
+                "# support for the $JOBS environment variable",
+                "# in case $JOBS is not specified, we guess a value",
+                "# we reserve one core outside CI environments",
+                'if [[ -z "$JOBS" ]]; then',
+                '    if [[ -z "$CI" ]]; then',
+                '        JOBS="$(nproc --ignore=1)"',
+                "    else",
+                '        JOBS="$(nproc)"',
+                "    fi",
+                "fi",
+                'make -j "$JOBS"',
+            ]
+        )
 
         if self._builder_config.get("install", True):
-            generator.add_lines([
-                "",
-                "# install binaries into AppDir (requires correct CMake install(...) configuration)",
-                "make install DESTDIR={}".format(shlex.quote(get_appdir_path(build_dir))),
-            ])
+            generator.add_lines(
+                [
+                    "",
+                    "# install binaries into AppDir (requires correct CMake install(...) configuration)",
+                    "make install DESTDIR={}".format(shlex.quote(get_appdir_path(build_dir))),
+                ]
+            )
 
         # optional support for CPack
         # allows projects to also build packages, making use of appimagecraft features like auto-created clean build
@@ -149,10 +153,12 @@ class CMakeBuilder(BuilderBase):
         # caution: must check for non-None value (like False) explicitly, an empty value is allowed and would be
         # represented as None
         if cpack_args is not False:
-            generator.add_lines([
-                "",
-                "# build packages with cpack",
-            ])
+            generator.add_lines(
+                [
+                    "",
+                    "# build packages with cpack",
+                ]
+            )
 
             cpack_generators: Union[dict, None] = None
 
