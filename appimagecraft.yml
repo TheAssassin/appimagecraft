@@ -47,3 +47,4 @@ appimage:
     raw_environment:
       - PIP_WORKDIR="$PROJECT_ROOT"
       - OUTPUT=appimagecraft-"$ARCH".AppImage
+      - UPD_INFO="gh-releases-zsync|TheAssassin|appimagecraft|continuous|appimagecraft-*$ARCH.AppImage.zsync"
