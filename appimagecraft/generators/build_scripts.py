@@ -119,7 +119,7 @@ class AllBuildScriptsGenerator:
         appimage_script_path = os.path.join(build_dir, "build-appimage.sh")
 
         appimage_script_gen = AppImageBuildScriptGenerator(appimage_build_config)
-        appimage_script_gen.build_file(appimage_script_path)
+        appimage_script_gen.build_file(appimage_script_path, self._project_root_dir, build_dir)
 
         # call AppImage build script
         main_script_gen.add_line("# build AppImage")
@@ -162,7 +162,7 @@ class AllBuildScriptsGenerator:
 
     def generate_pre_post_build_scripts(self, build_dir: str):
         gen = PrePostBuildScriptsGenerator(self._config.get("scripts", None))
-        gen.build_files(build_dir)
+        gen.build_files(self._project_root_dir, build_dir)
 
     def generate_all_scripts(self, build_dir) -> str:
         if build_dir is None:

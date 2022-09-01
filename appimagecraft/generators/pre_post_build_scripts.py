@@ -2,7 +2,7 @@ import os.path
 
 from typing import List
 
-from .bash_script import BashScriptBuilder
+from .bash_script import ProjectAwareBashScriptBuilder
 
 
 class PrePostBuildScriptsGenerator:
@@ -12,9 +12,9 @@ class PrePostBuildScriptsGenerator:
 
         self._config = scripts_config
 
-    def build_files(self, build_dir: str):
+    def build_files(self, project_root_dir: str, build_dir: str):
         def write_build_script(path: str, lines: List[str]):
-            gen = BashScriptBuilder(path)
+            gen = ProjectAwareBashScriptBuilder(path, project_root_dir, build_dir)
             gen.add_lines(lines)
             gen.build_file()
 
