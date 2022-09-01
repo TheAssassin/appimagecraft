@@ -11,7 +11,7 @@ trap cleanup EXIT
 "${PYTHON:-python3}" -m venv "$tmpdir"
 . "$tmpdir"/bin/activate
 
-pip install -e .
+pip install .
 
 
 EXTRA_ARGS=()
