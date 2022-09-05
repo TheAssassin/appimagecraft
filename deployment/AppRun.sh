@@ -8,5 +8,4 @@ this_dir="$(dirname "$0")"
 SHELLCHECK="$this_dir/usr/bin/shellcheck"
 [[ -f "$SHELLCHECK" ]] && export SHELLCHECK
 
-"$this_dir"/usr/bin/python -m appimagecraft "$@"
-EOF
+exec "$this_dir"/usr/bin/python -m appimagecraft "$@"
