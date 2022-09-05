@@ -9,39 +9,16 @@ build:
 
 scripts:
   post_build:
-    - |2
-      cat > "$BUILD_DIR"/appimagecraft.desktop <<\EOF
-      [Desktop Entry]
-      Name=appimagecraft
-      Type=Application
-      Icon=appimagecraft
-      Exec=appimagecraft
-      NoDisplay=true
-      Terminal=true
-      Categories=Utility;
-      EOF
-    - |2
-      cat > "$BUILD_DIR"/AppRun.sh <<\EOF
-      #! /bin/bash
-
-      this_dir=$(dirname "$0")
-
-      # add own bin dir as fallback
-      # might come in handy if readelf binary is missing on the system (not sure if that's even possible, though)
-      # also makes using bundled shellcheck easier
-      export PATH="$PATH":"$this_dir"/usr/bin
-
-      "$this_dir"/usr/bin/python -m appimagecraft "$@"
-      EOF
-    - chmod +x AppRun.sh
-    - touch "$BUILD_DIR"/appimagecraft.svg
+    - |
+      wget https://github.com/koalaman/shellcheck/releases/download/v0.8.0/shellcheck-v0.8.0.linux.x86_64.tar.xz -O - | \
+          tar xJ -C "$BUILD_DIR" --strip-components=1
 
 
 appimage:
   linuxdeploy:
     plugins:
       - conda
-    extra_args: -i "$BUILD_DIR"/appimagecraft.svg -d "$BUILD_DIR"/appimagecraft.desktop --custom-apprun "$BUILD_DIR"/AppRun.sh -e $(which shellcheck)
+    extra_args: -i "$PROJECT_ROOT"/deployment/appimagecraft.svg -d "$PROJECT_ROOT"/deployment/appimagecraft.desktop --custom-apprun "$PROJECT_ROOT"/deployment/AppRun.sh -e "$BUILD_DIR"/shellcheck
     environment:
       PIP_REQUIREMENTS: .
     raw_environment:

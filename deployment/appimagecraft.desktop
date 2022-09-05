@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=appimagecraft
+Type=Application
+Icon=appimagecraft
+Exec=appimagecraft
+NoDisplay=true
+Terminal=true
+Categories=Utility;
