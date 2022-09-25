@@ -31,13 +31,14 @@ class BashScriptBuilder:
         ]
 
     def export_env_var(self, name: str, value: str, raw: bool = False):
-        name = shlex.quote(name)
+        # convert to string explicitly, as we may receive ints from the YAML parser
+        name = shlex.quote(str(name))
 
         if not raw:
-            value = shlex.quote(value)
+            value = shlex.quote(str(value))
 
-        self.add_line("{}={}".format(name, value))
-        self.add_line("export {}".format(name, value))
+        self.add_line("{}={}".format(str(name), str(value)))
+        self.add_line("export {}".format(str(name), str(value)))
 
         return self
 
