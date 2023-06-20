@@ -63,6 +63,15 @@ class AppImageBuildScriptGenerator:
 
         gen.add_lines(
             [
+                "# we store all downloaded files in a separate directory so we can easily skip them when moving the artifacts around",
+                "mkdir -p downloads",
+                "pushd downloads",
+                "",
+            ]
+        )
+
+        gen.add_lines(
+            [
                 "# fetch linuxdeploy from GitHub releases",
                 "wget -c {}".format(shlex.quote(url)),
                 "chmod +x linuxdeploy-{}.AppImage".format(arch),
@@ -151,6 +160,8 @@ class AppImageBuildScriptGenerator:
 
         gen.add_line()
 
+        gen.add_lines(["# we're done downloading, let's move back to the root directory", "popd", ""])
+
         # export environment vars listed in config
         def try_export_env_vars(key_name, raw=False):
             try:
@@ -178,7 +189,13 @@ class AppImageBuildScriptGenerator:
         try_export_env_vars("raw_environment", raw=True)
 
         # run linuxdeploy with the configured plugins
-        ld_command = ["./linuxdeploy-{}.AppImage".format(arch), "--appdir", "../AppDir", "--output", "appimage"]
+        ld_command = [
+            "./downloads/linuxdeploy-{}.AppImage".format(arch),
+            "--appdir",
+            "../AppDir",
+            "--output",
+            "appimage",
+        ]
 
         for plugin_name in ld_plugins.keys():
             ld_command.append("--plugin")
@@ -199,8 +216,8 @@ class AppImageBuildScriptGenerator:
         gen.add_lines(
             [
                 "",
-                "# move built AppImages to artifacts dir",
-                "find . -type f -iname '*.AppImage*' -not -iname 'linuxdeploy*.AppImage' -exec mv '{}' ../artifacts ';'",
+                "# move built AppImages to artifacts dir, excluding the downloaded linuxdeploy stuff",
+                "find . -type f -path ./downloads -prune -o -iname '*.AppImage*' -exec mv '{}' ../artifacts ';'",
             ]
         )
 
