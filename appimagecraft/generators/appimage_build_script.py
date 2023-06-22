@@ -217,7 +217,9 @@ class AppImageBuildScriptGenerator:
             [
                 "",
                 "# move built AppImages to artifacts dir, excluding the downloaded linuxdeploy stuff",
-                "find . -type f -path ./downloads -prune -o -iname '*.AppImage*' -exec mv '{}' ../artifacts ';'",
+                'echo "====================',
+                'echo "Generated AppImages:"',
+                "find . -path ./downloads -prune -o -iname '*.AppImage*' -print -exec mv '{}' ../artifacts ';'",
             ]
         )
 
