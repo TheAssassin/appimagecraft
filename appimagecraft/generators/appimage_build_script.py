@@ -22,7 +22,7 @@ class AppImageBuildScriptGenerator:
 
         arch = self._config.get("arch", platform.machine())
 
-        valid_archs = ["x86_64", "i386"]
+        valid_archs = ["x86_64", "i386", "aarch64"]
 
         # there's a few valid aliases for the known valid archs, which we can substitute automatically
         substitutes = {
