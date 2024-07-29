@@ -1,0 +1,29 @@
+version: 1
+
+project:
+  name: com.github.theassassin.appimagecraft
+  version_command: cd "$PROJECT_ROOT" && git rev-parse --short HEAD
+
+build:
+  null:
+
+scripts:
+  post_build:
+    # note: only using this multiline syntax allows the use of a literal colon in the warning message with PyYAML
+    - |
+      wget https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.aarch64.tar.xz -O - | \
+          tar xJ -C "$BUILD_DIR" --strip-components=1
+
+appimage:
+  arch: aarch64
+
+  linuxdeploy:
+    plugins:
+      - conda
+    extra_args: -i "$PROJECT_ROOT"/deployment/appimagecraft.svg -d "$PROJECT_ROOT"/deployment/appimagecraft.desktop --custom-apprun "$PROJECT_ROOT"/deployment/AppRun.sh
+    environment:
+      PIP_REQUIREMENTS: .
+      ARCH: aarch64
+    raw_environment:
+      - PIP_WORKDIR="$PROJECT_ROOT"
+      - OUTPUT=appimagecraft-"$ARCH".AppImage
