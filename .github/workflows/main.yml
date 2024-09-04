@@ -57,6 +57,8 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
       - name: Inspect directory after downloading artifacts
         run: ls -alFR
       - name: Create release and upload artifacts
