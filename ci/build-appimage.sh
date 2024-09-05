@@ -20,6 +20,9 @@ case "$ARCH" in
     i386|i686)
         EXTRA_ARGS=("-f" "appimagecraft-i386.yml")
         ;;
+    aarch64)
+	EXTRA_ARGS=("-f" "appimagecraft-aarch64.yml")
+	;;
 esac
 
 appimagecraft build "${EXTRA_ARGS[@]}"
