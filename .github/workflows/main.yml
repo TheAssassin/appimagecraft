@@ -33,9 +33,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        OS: [ubuntu-latest]
         ARCH: [x86_64, i386]
+        include:
+          - OS: ubuntu-22.04-arm
+            ARCH: aarch64
     name: Build AppImage for ${{ matrix.ARCH }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.OS }}
     steps:
       - uses: actions/checkout@v2
       - name: Build AppImage
