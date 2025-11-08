@@ -25,7 +25,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
               python${{ matrix.PYTHON_VERSION }}-minimal \
               python${{ matrix.PYTHON_VERSION }}-venv
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build example projects
         run: bash -xe ci/build-example-projects.sh
 
@@ -41,7 +41,7 @@ jobs:
     name: Build AppImage for ${{ matrix.ARCH }}
     runs-on: ${{ matrix.OS }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
       - name: Build AppImage
         run: |
           export ARCH="${{ matrix.ARCH }}"
