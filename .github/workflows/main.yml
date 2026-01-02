@@ -12,9 +12,9 @@ jobs:
       fail-fast: false
       matrix:
         # apparently these are interpreted as floats, so we have to wrap them in quotes
-        PYTHON_VERSION: ["3.7", "3.8", "3.9", "3.10"]
+        PYTHON_VERSION: ["3.10", "3.11", "3.12", "3.13"]
     name: Test against Python ${{ matrix.PYTHON_VERSION }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       PYTHON: python${{ matrix.PYTHON_VERSION }}
     steps:
@@ -36,7 +36,7 @@ jobs:
         OS: [ubuntu-latest]
         ARCH: [x86_64, i386]
         include:
-          - OS: ubuntu-22.04-arm
+          - OS: ubuntu-24.04-arm
             ARCH: aarch64
     name: Build AppImage for ${{ matrix.ARCH }}
     runs-on: ${{ matrix.OS }}
