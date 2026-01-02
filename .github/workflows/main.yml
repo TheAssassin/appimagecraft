@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         # apparently these are interpreted as floats, so we have to wrap them in quotes
-        PYTHON_VERSION: ["3.10", "3.11", "3.12", "3.13"]
+        PYTHON_VERSION: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     name: Test against Python ${{ matrix.PYTHON_VERSION }}
     runs-on: ubuntu-24.04
     env:
@@ -23,7 +23,7 @@ jobs:
           sudo add-apt-repository ppa:deadsnakes/ppa
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-              python${{ matrix.PYTHON_VERSION }}-minimal \
+              python${{ matrix.PYTHON_VERSION }} \
               python${{ matrix.PYTHON_VERSION }}-venv
       - uses: actions/checkout@v4
       - name: Build example projects
