@@ -15,7 +15,7 @@ coloredlogs = "^15.0.1"
 
 [tool.poetry.dev-dependencies]
 black = {extras = ["d"], version = "^26.1.0"}
-isort = "^7.0.0"
+isort = "^8.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
