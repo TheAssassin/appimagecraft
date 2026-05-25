@@ -14,7 +14,7 @@ PyYAML = "^6.0"
 coloredlogs = "^15.0.1"
 
 [tool.poetry.dev-dependencies]
-black = {extras = ["d"], version = "^26.5.0"}
+black = {extras = ["d"], version = "^26.5.1"}
 isort = "^8.0.1"
 
 [build-system]
